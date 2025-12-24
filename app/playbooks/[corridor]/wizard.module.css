@@ -1,0 +1,137 @@
+.wizardContainer {
+    max-width: 48rem;
+    /* 3xl */
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.stepper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--glass-border);
+    z-index: 0;
+    transform: translateY(-50%);
+}
+
+.step {
+    z-index: 10;
+    background: var(--background);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: 1px solid var(--glass-border);
+    transition: all var(--transition-normal);
+}
+
+.activeStep {
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.completedStep {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.panel {
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    min-height: 400px;
+}
+
+.stepTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.select,
+.input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.select:focus,
+.input:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.btnPrimary {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btnSecondary {
+    background: var(--glass-surface);
+    color: var(--foreground);
+    border: 1px solid var(--glass-border);
+}
+
+.warningBox {
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: #f43f5e;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+}
