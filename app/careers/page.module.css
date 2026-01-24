@@ -39,46 +39,50 @@
     margin-bottom: 3rem;
 }
 
-/* Premium CTA Card */
+/* Updated CTA Card */
 .ctaCard {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     margin: 0 auto;
     max-width: 600px;
-    text-align: left;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-.ctaText h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
+.ctaCardInner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+.ctaTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
     color: #fff;
-    margin-bottom: 0.25rem;
+    margin: 0;
 }
 
-.ctaText p {
-    font-size: 0.9rem;
+.ctaText {
+    flex: 1;
+    font-size: 1rem;
     color: var(--text-secondary);
     margin: 0;
 }
 
 .submitBtn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1.5rem;
     background: linear-gradient(90deg, var(--primary) 0%, #a855f7 100%);
-    /* Purple gradient */
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 99px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
@@ -90,17 +94,57 @@
     filter: brightness(1.1);
 }
 
-@media (max-width: 640px) {
-    .ctaCard {
-        flex-direction: column;
-        text-align: center;
-        gap: 1.5rem;
+@media (min-width: 640px) {
+    .ctaCardInner {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .ctaText {
+        text-align: left;
+        padding-left: 1rem;
     }
 }
 
-/* Filters */
-.filtersSection {
+
+/* Controls Section */
+.controlsSection {
     margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.searchBar {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 800px;
+    flex-direction: column;
+}
+
+@media (min-width: 640px) {
+    .searchBar {
+        flex-direction: row;
+    }
+}
+
+.searchInput {
+    flex: 1;
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .filterTags {
@@ -111,14 +155,14 @@
 }
 
 .filterTag {
-    padding: 0.6rem 1.2rem;
+    padding: 0.5rem 1rem;
     background: rgba(40, 40, 40, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 99px;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
@@ -158,27 +202,11 @@
     overflow: hidden;
 }
 
-.jobCard::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 4px;
-    background: var(--primary);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
 .jobCard:hover {
     transform: translateY(-4px);
     background: rgba(40, 40, 40, 0.6);
     border-color: rgba(255, 255, 255, 0.15);
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-}
-
-.jobCard:hover::before {
-    opacity: 1;
 }
 
 @media (min-width: 640px) {
@@ -194,11 +222,27 @@
     flex: 1;
 }
 
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+    flex-wrap: wrap;
+}
+
 .jobTitle {
     font-size: 1.25rem;
     font-weight: 600;
     color: #fff;
-    margin-bottom: 0.35rem;
+    margin: 0;
+}
+
+.dateBadge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
 }
 
 .jobCompany {
@@ -236,7 +280,6 @@
 .jobMeta {
     display: flex;
     flex-direction: column;
-    /* Mobile first stack */
     gap: 1rem;
     margin-top: 1.5rem;
     min-width: 140px;
@@ -252,8 +295,10 @@
 }
 
 .location {
-    color: var(--text-muted);
-    font-size: 0.9rem;
+    color: #fff;
+    /* Prominent location */
+    font-size: 0.95rem;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.35rem;

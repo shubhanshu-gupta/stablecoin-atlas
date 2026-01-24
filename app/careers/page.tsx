@@ -11,6 +11,7 @@ interface Job {
     type: string;
     tags: string[];
     url?: string;
+    created_at: string;
 }
 
 const POPULAR_SEARCHES = ["Stablecoin", "Compliance", "Payments", "Legal", "Engineering"];
@@ -19,6 +20,8 @@ export default function CareersPage() {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState('');
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [locationFilter, setLocationFilter] = useState('');
 
     useEffect(() => {
         async function fetchJobs() {
@@ -26,7 +29,10 @@ export default function CareersPage() {
             try {
                 const res = await fetch('/api/jobs', {
                     method: 'POST',
-                    body: JSON.stringify({ query: activeFilter })
+                    body: JSON.stringify({
+                        query: activeFilter || searchKeyword,
+                        location: locationFilter
+                    })
                 });
                 const data = await res.json();
                 setJobs(data as Job[]);
@@ -36,13 +42,25 @@ export default function CareersPage() {
                 setLoading(false);
             }
         }
-        // Debounce could be added here
+        // Debounce
         const timeoutId = setTimeout(fetchJobs, 500);
         return () => clearTimeout(timeoutId);
-    }, [activeFilter]);
+    }, [activeFilter, searchKeyword, locationFilter]);
 
     const handlePostJob = () => {
         alert("Post a Job flow coming soon! This will open a form for users to submit opportunities.");
+    };
+
+    const formatDate = (dateString: string) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        // Calculate days ago
+        const diffTime = Math.abs(new Date().getTime() - date.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays <= 1) return 'New';
+        if (diffDays < 7) return `${diffDays}d ago`;
+        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     };
 
     return (
@@ -55,18 +73,35 @@ export default function CareersPage() {
                     </p>
 
                     <div className={styles.ctaCard}>
-                        <div className={styles.ctaText}>
-                            <h3>Hiring?</h3>
-                            <p>Reach specialized talent in the stablecoin ecosystem.</p>
+                        <div className={styles.ctaCardInner}>
+                            <h3 className={styles.ctaTitle}>Hiring?</h3>
+                            <p className={styles.ctaText}>Reach specialized talent in the stablecoin ecosystem.</p>
+                            <button className={styles.submitBtn} onClick={handlePostJob}>
+                                Post a Job
+                            </button>
                         </div>
-                        <button className={styles.submitBtn} onClick={handlePostJob}>
-                            Post a Job
-                        </button>
                     </div>
                 </div>
             </header>
 
-            <div className={styles.filtersSection}>
+            <div className={styles.controlsSection}>
+                <div className={styles.searchBar}>
+                    <input
+                        type="text"
+                        placeholder="Search by keyword..."
+                        className={styles.searchInput}
+                        value={searchKeyword}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Location (e.g. Remote, NY)"
+                        className={styles.searchInput}
+                        value={locationFilter}
+                        onChange={(e) => setLocationFilter(e.target.value)}
+                    />
+                </div>
+
                 <div className={styles.filterTags}>
                     <button
                         className={`${styles.filterTag} ${activeFilter === '' ? styles.active : ''}`}
@@ -96,7 +131,12 @@ export default function CareersPage() {
                     {jobs.map((job) => (
                         <a key={job.id} href={job.url} target="_blank" rel="noopener noreferrer" className={styles.jobCard}>
                             <div className={styles.jobMain}>
-                                <h2 className={styles.jobTitle}>{job.title}</h2>
+                                <div className={styles.titleRow}>
+                                    <h2 className={styles.jobTitle}>{job.title}</h2>
+                                    {job.created_at && (
+                                        <span className={styles.dateBadge}>{formatDate(job.created_at)}</span>
+                                    )}
+                                </div>
                                 <div className={styles.jobCompany}>{job.company}</div>
                                 <div className={styles.tags}>
                                     <span className={styles.typeTag}>{job.type}</span>
