@@ -17,10 +17,11 @@ export async function POST(req: Request) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                query: searchQuery,
+                // theirstack doesn't use 'query', uses specific fields
+                job_title_or: [searchQuery],
                 page,
                 limit,
-                posted_at_max_age_days: 30 // Fresh jobs only
+                posted_at_max_age_days: 30 // Required field
             })
         });
 
