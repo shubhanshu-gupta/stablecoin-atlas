@@ -5,10 +5,28 @@ const THEIR_STACK_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaH
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { query = "", page = 0, limit = 20 } = body;
+        const { query = "", location = "", page = 0, limit = 20 } = body;
 
-        // Default search for stablecoin related roles if no specific query
-        const searchQuery = query || "stablecoin compliance blockchain crypto payments";
+        // Prepare keywords
+        let keywords: string[] = [];
+        if (query) {
+            keywords = [query];
+        } else {
+            // Default split keywords for broader match
+            keywords = ["stablecoin", "compliance", "blockchain", "crypto", "payments", "defi", "web3"];
+        }
+
+        const payload: any = {
+            job_title_or: keywords,
+            page,
+            limit,
+            posted_at_max_age_days: 60, // Widened search window
+            order_by: [{ field: "date_posted", desc: true }]
+        };
+
+        if (location) {
+            payload.company_location_pattern_or = [location];
+        }
 
         const response = await fetch('https://api.theirstack.com/v1/jobs/search', {
             method: 'POST',
@@ -16,13 +34,7 @@ export async function POST(req: Request) {
                 'Authorization': `Bearer ${THEIR_STACK_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                // theirstack doesn't use 'query', uses specific fields
-                job_title_or: [searchQuery],
-                page,
-                limit,
-                posted_at_max_age_days: 30 // Required field
-            })
+            body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
@@ -30,13 +42,6 @@ export async function POST(req: Request) {
         }
 
         const data = await response.json();
-
-        // Map TheirStack response to our Job interface
-        // Note: Actual TheirStack response structure needs to be handled carefully.
-        // Assuming 'data' or 'jobs' array in response based on common patterns, 
-        // but typically it returns a list directly or inside an object.
-        // Let's assume standard { data: [...] } or [...] for now.
-        // If the API returns a list of jobs directly:
         const jobsList = Array.isArray(data) ? data : (data.data || data.jobs || []);
 
         const mappedJobs = jobsList.map((job: any) => ({
@@ -45,7 +50,7 @@ export async function POST(req: Request) {
             company: job.company_object?.name || job.company_name || job.company || "Unknown",
             location: job.location || "Remote",
             type: job.employment_type || "Full-time",
-            tags: job.technologies || [], // TheirStack provides tech stack tags
+            tags: job.technologies || [],
             url: job.url || job.display_url || "#",
             created_at: job.date_posted || new Date().toISOString()
         }));
@@ -59,8 +64,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-    // Proxy GET to POST for initial load without params
-    return POST(new Request('https://placeholder.com', { // dummy request
+    return POST(new Request('https://placeholder.com', {
         method: 'POST',
         body: JSON.stringify({})
     }));
