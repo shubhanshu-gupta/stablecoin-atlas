@@ -28,6 +28,7 @@
     align-items: center;
     justify-content: space-between;
     height: 4rem;
+    position: relative;
 }
 
 .logo {
@@ -58,10 +59,13 @@
     .links {
         display: flex;
         align-items: center;
-        gap: 2rem;
-        font-size: 0.875rem;
+        gap: 2.5rem;
+        font-size: 1.125rem;
         font-weight: 500;
         color: var(--text-secondary);
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 
