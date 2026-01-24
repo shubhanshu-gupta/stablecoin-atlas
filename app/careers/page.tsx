@@ -10,9 +10,10 @@ interface Job {
     location: string;
     type: string;
     tags: string[];
+    url?: string;
 }
 
-const POPULAR_SEARCHES = ["stablecoin", "crypto compliance", "blockchain payments", "digital asset", "VASP"];
+const POPULAR_SEARCHES = ["Stablecoin", "Compliance", "Payments", "Legal", "Engineering"];
 
 export default function CareersPage() {
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -21,8 +22,12 @@ export default function CareersPage() {
 
     useEffect(() => {
         async function fetchJobs() {
+            setLoading(true);
             try {
-                const res = await fetch('/api/jobs');
+                const res = await fetch('/api/jobs', {
+                    method: 'POST',
+                    body: JSON.stringify({ query: activeFilter })
+                });
                 const data = await res.json();
                 setJobs(data as Job[]);
             } catch (error) {
@@ -31,19 +36,10 @@ export default function CareersPage() {
                 setLoading(false);
             }
         }
-        fetchJobs();
-    }, []);
-
-    const filteredJobs = jobs.filter(job => {
-        if (!activeFilter) return true;
-
-        const term = activeFilter.toLowerCase();
-        return (
-            job.tags.some(tag => tag.toLowerCase().includes(term)) ||
-            job.title.toLowerCase().includes(term) ||
-            job.type.toLowerCase().includes(term)
-        );
-    });
+        // Debounce could be added here
+        const timeoutId = setTimeout(fetchJobs, 500);
+        return () => clearTimeout(timeoutId);
+    }, [activeFilter]);
 
     const handlePostJob = () => {
         alert("Post a Job flow coming soon! This will open a form for users to submit opportunities.");
@@ -52,26 +48,31 @@ export default function CareersPage() {
     return (
         <div className={styles.page}>
             <header className={styles.header}>
-                <h1 className={`${styles.title} text-gradient`}>Stablecoin Careers</h1>
-                <p className={styles.description}>
-                    Find your role in the future of money. Curated opportunities across Product, Engineering, Compliance, and Policy.
-                </p>
-                <div className={styles.ctaContainer}>
-                    <button className={styles.submitBtn} onClick={handlePostJob}>
-                        Post a Job
-                    </button>
-                    <span className={styles.ctaSubtext}>Hiring? Reach specialized talent.</span>
+                <div className={styles.headerContent}>
+                    <h1 className={`${styles.title} text-gradient`}>Future of Money Careers</h1>
+                    <p className={styles.description}>
+                        Find your role in the future of money. Curated opportunities across Product, Engineering, Compliance, and Policy.
+                    </p>
+
+                    <div className={styles.ctaCard}>
+                        <div className={styles.ctaText}>
+                            <h3>Hiring?</h3>
+                            <p>Reach specialized talent in the stablecoin ecosystem.</p>
+                        </div>
+                        <button className={styles.submitBtn} onClick={handlePostJob}>
+                            Post a Job
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            <div className={styles.filters}>
-                <span className={styles.filterLabel}>Popular Filters:</span>
+            <div className={styles.filtersSection}>
                 <div className={styles.filterTags}>
                     <button
                         className={`${styles.filterTag} ${activeFilter === '' ? styles.active : ''}`}
                         onClick={() => setActiveFilter('')}
                     >
-                        All
+                        All Roles
                     </button>
                     {POPULAR_SEARCHES.map(tag => (
                         <button
@@ -86,30 +87,37 @@ export default function CareersPage() {
             </div>
 
             {loading ? (
-                <div className="text-center py-12 text-gray-400">Loading opportunities...</div>
+                <div className={styles.loadingState}>
+                    <div className={styles.spinner}></div>
+                    <p>Searching opportunities...</p>
+                </div>
             ) : (
                 <div className={styles.jobList}>
-                    {filteredJobs.map((job) => (
-                        <a key={job.id} href="#" className={styles.jobCard}>
+                    {jobs.map((job) => (
+                        <a key={job.id} href={job.url} target="_blank" rel="noopener noreferrer" className={styles.jobCard}>
                             <div className={styles.jobMain}>
                                 <h2 className={styles.jobTitle}>{job.title}</h2>
-                                <div className={styles.jobCompany}>{job.company} • {job.type}</div>
+                                <div className={styles.jobCompany}>{job.company}</div>
                                 <div className={styles.tags}>
-                                    {job.tags.map(tag => (
-                                        <span key={tag} className={styles.miniTag}>#{tag}</span>
+                                    <span className={styles.typeTag}>{job.type}</span>
+                                    {job.tags?.slice(0, 3).map(tag => (
+                                        <span key={tag} className={styles.techTag}>{tag}</span>
                                     ))}
                                 </div>
                             </div>
 
                             <div className={styles.jobMeta}>
-                                <span className={styles.location}>{job.location}</span>
-                                <span className={styles.applyBtn}>Apply Now</span>
+                                <span className={styles.location}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                    {job.location}
+                                </span>
+                                <span className={styles.applyBtn}>Apply &rarr;</span>
                             </div>
                         </a>
                     ))}
-                    {!loading && filteredJobs.length === 0 && (
-                        <div className="text-center py-12 text-gray-500">
-                            No jobs found matching "{activeFilter}".
+                    {!loading && jobs.length === 0 && (
+                        <div className={styles.emptyState}>
+                            No jobs found matching your criteria.
                         </div>
                     )}
                 </div>
