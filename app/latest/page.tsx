@@ -17,6 +17,12 @@ export default function LatestPage() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [sortOrder, setSortOrder] = useState('newest');
+    const [filterType, setFilterType] = useState('all'); // 'all' | 'regulations' | 'companies'
+
+    // Placeholder for submission logic - to be connected to Supabase later
+    const handleSubmitNews = () => {
+        alert("News submission flow coming soon! This will open a form to submit stories.");
+    };
 
     useEffect(() => {
         async function fetchNews() {
@@ -38,11 +44,33 @@ export default function LatestPage() {
     const filteredNews = news
         .filter(item => {
             const term = search.toLowerCase();
-            return (
+            const matchesSearch = (
                 item.title.toLowerCase().includes(term) ||
                 item.contentSnippet.toLowerCase().includes(term) ||
                 item.source.toLowerCase().includes(term)
             );
+
+            if (!matchesSearch) return false;
+
+            if (filterType === 'all') return true;
+            if (filterType === 'regulations') {
+                return (
+                    item.title.toLowerCase().includes('regulation') ||
+                    item.title.toLowerCase().includes('compliance') ||
+                    item.title.toLowerCase().includes('law') ||
+                    item.contentSnippet.toLowerCase().includes('regulation')
+                );
+            }
+            if (filterType === 'companies') {
+                // Heuristic: check if title/snippet contains known company names could be improved
+                // For now, relies on keywords often associated with corporate news
+                return (
+                    item.title.toLowerCase().includes('launch') ||
+                    item.title.toLowerCase().includes('partnership') ||
+                    item.source.toLowerCase().includes('company') // Hypothetical
+                );
+            }
+            return true;
         })
         .sort((a, b) => {
             const dateA = new Date(a.isoDate || 0).getTime();
@@ -69,12 +97,24 @@ export default function LatestPage() {
                 />
                 <select
                     className={styles.select}
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                >
+                    <option value="all">All News</option>
+                    <option value="regulations">Regulatory Updates</option>
+                    <option value="companies">Company News</option>
+                </select>
+                <select
+                    className={styles.select}
                     value={sortOrder}
                     onChange={(e) => setSortOrder(e.target.value)}
                 >
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
                 </select>
+                <button className={styles.submitBtn} onClick={handleSubmitNews}>
+                    Submit News
+                </button>
             </div>
 
             {loading ? (

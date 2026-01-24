@@ -16,12 +16,9 @@ export default function Navbar() {
 
                     {/* Desktop Nav */}
                     <div className={styles.links}>
-                        <Link href="/learn" className={styles.link}>Learn</Link>
+                        <Link href="/learning" className={styles.link}>Learning</Link>
                         <Link href="/latest" className={styles.link}>Latest</Link>
                         <Link href="/careers" className={styles.link}>Careers</Link>
-                        <Link href="/companies" className={styles.link}>Companies</Link>
-                        <Link href="/regulators" className={styles.link}>Regulators</Link>
-                        <Link href="/playbooks" className={styles.link}>Playbooks</Link>
                     </div>
 
                     {/* CTA / Mobile Menu Trigger */}
