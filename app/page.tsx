@@ -28,7 +28,7 @@ export default function Home() {
 
           <div className={styles.actions}>
             <Link
-              href="/learn"
+              href="/learning"
               className={styles.primaryBtn}
             >
               Start Learning

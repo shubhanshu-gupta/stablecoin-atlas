@@ -1,118 +1,172 @@
 import { NextResponse } from 'next/server';
 
-const THEIR_STACK_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaHViaGFuc2h1Lmd1cHRhOTNAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOiJ1c2VyIiwiY3JlYXRlZF9hdCI6IjIwMjYtMDEtMjRUMDc6NDc6MjYuNTg3MDU3KzAwOjAwIn0.LZEb4kJcl54ChgyEvvBBB-4igVSp4yNu-Q6W-mV5Q5E";
+// ─── Greenhouse job board companies (free, no API key) ────────────────────────
+// Per PRD §2.2: prioritise crypto/stablecoin-adjacent companies
+const GREENHOUSE_COMPANIES = [
+    { slug: 'coinbase', name: 'Coinbase' },
+    { slug: 'ripple', name: 'Ripple' },
+    { slug: 'gemini', name: 'Gemini' },
+    { slug: 'figment', name: 'Figment' },
+    { slug: 'stripe', name: 'Stripe' },
+];
 
-// Map our role family labels to likely job title keywords
-const ROLE_FAMILY_KEYWORDS: Record<string, string[]> = {
-    Product: ['product manager', 'product lead', 'product owner'],
-    Engineering: ['software engineer', 'backend engineer', 'frontend engineer', 'smart contract', 'solidity', 'developer'],
-    Compliance: ['compliance', 'AML', 'KYC', 'VASP'],
-    Legal: ['legal', 'counsel', 'regulatory affairs', 'policy'],
-    BD: ['business development', 'partnerships', 'account executive', 'sales'],
-    Treasury: ['treasury', 'risk', 'quantitative analyst'],
-    Operations: ['operations', 'ops', 'project manager'],
-    Design: ['UX', 'UI', 'design', 'product designer'],
-    Data: ['data analyst', 'data engineer', 'data scientist', 'analytics'],
-    Other: [],
-};
+// ─── Domain keyword filter (PRD Group 1) ─────────────────────────────────────
+const DOMAIN_KEYWORDS = [
+    'stablecoin', 'blockchain', 'crypto', 'digital asset', 'vasp',
+    'virtual asset', 'web3', 'defi', 'tokeniz', 'tokenis', 'on-chain',
+    'payments', 'fintech', 'cbdc', 'custody', 'wallet',
+];
+
+// These company names are always relevant regardless of title keywords
+const ALWAYS_RELEVANT_COMPANIES = new Set(['Ripple', 'Gemini', 'Figment', 'Coinbase']);
+
+// ─── Role family inference ────────────────────────────────────────────────────
+const ROLE_FAMILY_MAP: Array<{ pattern: RegExp; family: string }> = [
+    { pattern: /product\s*(manager|lead|owner|director)/i, family: 'Product' },
+    { pattern: /engineer|developer|solidity|backend|frontend|smart\s*contract|full[\s-]?stack|devops|sre|infrastructure|platform/i, family: 'Engineering' },
+    { pattern: /compliance|aml|kyc|sanctions|mlro|bsa/i, family: 'Compliance' },
+    { pattern: /legal|counsel|attorney|policy|regulatory|paralegal/i, family: 'Legal' },
+    { pattern: /business\s*dev|bd\b|partnerships|account\s*(executive|manager)|sales\s*(manager|lead)/i, family: 'BD' },
+    { pattern: /treasury|risk|quant|financial\s*(analyst|controller|planning)|fp&a|controller/i, family: 'Treasury' },
+    { pattern: /operat|program\s*manager|project\s*manager|customer\s*success|support/i, family: 'Operations' },
+    { pattern: /design|ux|ui\b|user\s*experi|graphic|brand/i, family: 'Design' },
+    { pattern: /data\s*(analyst|engineer|scientist|warehouse)|analytics|ml\b|machine\s*learning|bi\b|business\s*intelligence/i, family: 'Data' },
+];
+
+function inferRoleFamily(title: string): string {
+    for (const { pattern, family } of ROLE_FAMILY_MAP) {
+        if (pattern.test(title)) return family;
+    }
+    return 'Other';
+}
+
+function isDomainRelevant(title: string, companyName: string): boolean {
+    if (ALWAYS_RELEVANT_COMPANIES.has(companyName)) return true;
+    const lower = title.toLowerCase();
+    return DOMAIN_KEYWORDS.some(kw => lower.includes(kw));
+}
+
+interface GreenhouseJob {
+    id: number;
+    title: string;
+    updated_at: string;
+    location: { name: string };
+    absolute_url: string;
+    departments: Array<{ name: string }>;
+}
+
+interface MappedJob {
+    id: string;
+    title: string;
+    company: string;
+    location: string;
+    type: string;
+    role_family: string;
+    tags: string[];
+    url: string;
+    created_at: string;
+    source: string;
+}
+
+async function fetchGreenhouseJobs(slug: string, companyName: string): Promise<MappedJob[]> {
+    try {
+        const res = await fetch(
+            `https://boards-api.greenhouse.io/v1/boards/${slug}/jobs`,
+            { next: { revalidate: 3600 } }   // cache 1 hour per Next.js fetch
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const jobs: GreenhouseJob[] = data.jobs ?? [];
+
+        return jobs
+            .filter(j => isDomainRelevant(j.title, companyName))
+            .map(j => ({
+                id: `gh-${slug}-${j.id}`,
+                title: j.title,
+                company: companyName,
+                location: j.location?.name ?? 'Remote',
+                type: 'Full-time',
+                role_family: inferRoleFamily(j.title),
+                tags: (j.departments ?? []).map((d: { name: string }) => d.name).filter(Boolean).slice(0, 3),
+                url: j.absolute_url,
+                created_at: j.updated_at ?? new Date().toISOString(),
+                source: 'Greenhouse',
+            }));
+    } catch (err) {
+        console.error(`Greenhouse fetch failed for ${slug}:`, err);
+        return [];
+    }
+}
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json();
+        const body = await req.json().catch(() => ({}));
         const {
-            query = "",
-            location = "",
-            page = 0,
-            limit = 20,
-            role_family = "",
-            location_type = "",
+            query = '',
+            location = '',
+            role_family = '',
+            location_type = '',
             date_range_days = null,
         } = body;
 
-        // Build keywords — merge query + role_family expansion
-        let keywords: string[] = [];
-        if (query) {
-            keywords = query.split(' ').filter(Boolean);
-        }
-        if (role_family && ROLE_FAMILY_KEYWORDS[role_family]) {
-            keywords = [...keywords, ...ROLE_FAMILY_KEYWORDS[role_family]];
-        }
-        if (keywords.length === 0) {
-            keywords = ["stablecoin", "compliance", "blockchain", "crypto", "payments", "defi", "web3"];
-        }
+        // Fetch all Greenhouse boards in parallel
+        const results = await Promise.all(
+            GREENHOUSE_COMPANIES.map(c => fetchGreenhouseJobs(c.slug, c.name))
+        );
+        let jobs = results.flat();
 
-        const maxAge = date_range_days ?? 60;
-
-        const payload: any = {
-            job_title_or: keywords,
-            page,
-            limit,
-            posted_at_max_age_days: maxAge,
-            order_by: [{ field: "date_posted", desc: true }],
-        };
-
-        // Location filters
-        if (location) {
-            payload.company_location_pattern_or = [location];
-        }
-        if (location_type) {
-            // TheirStack supports remote_or_hybrid_only for remote filter
-            if (location_type === 'Remote') payload.remote = true;
-        }
-
-        const response = await fetch('https://api.theirstack.com/v1/jobs/search', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${THEIR_STACK_API_KEY}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
+        // Deduplicate by URL
+        const seen = new Set<string>();
+        jobs = jobs.filter(j => {
+            if (seen.has(j.url)) return false;
+            seen.add(j.url);
+            return true;
         });
 
-        if (!response.ok) {
-            throw new Error(`TheirStack API error: ${response.status}`);
+        // Apply client-requested filters
+        if (query) {
+            const q = query.toLowerCase();
+            jobs = jobs.filter(j =>
+                j.title.toLowerCase().includes(q) ||
+                j.company.toLowerCase().includes(q) ||
+                j.role_family.toLowerCase().includes(q) ||
+                j.tags.some((t: string) => t.toLowerCase().includes(q))
+            );
+        }
+        if (role_family) {
+            jobs = jobs.filter(j => j.role_family === role_family);
+        }
+        if (location) {
+            const loc = location.toLowerCase();
+            jobs = jobs.filter(j => j.location.toLowerCase().includes(loc));
+        }
+        if (location_type === 'Remote') {
+            jobs = jobs.filter(j => j.location.toLowerCase().includes('remote'));
+        } else if (location_type === 'On-site') {
+            jobs = jobs.filter(j => !j.location.toLowerCase().includes('remote'));
+        }
+        if (date_range_days) {
+            const cutoff = Date.now() - date_range_days * 86_400_000;
+            jobs = jobs.filter(j => new Date(j.created_at).getTime() >= cutoff);
         }
 
-        const data = await response.json();
-        const jobsList = Array.isArray(data) ? data : (data.data || data.jobs || []);
+        // Sort newest first
+        jobs.sort((a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
 
-        const mappedJobs = jobsList.map((job: any) => ({
-            id: job.id,
-            title: job.job_title || job.title,
-            company: job.company_object?.name || job.company_name || job.company || "Unknown",
-            location: job.location || "Remote",
-            type: job.employment_type || "Full-time",
-            role_family: role_family || inferRoleFamily(job.job_title || job.title || ''),
-            tags: job.technologies || [],
-            url: job.url || job.display_url || "#",
-            created_at: job.date_posted || new Date().toISOString(),
-        }));
-
-        return NextResponse.json(mappedJobs);
-
+        return NextResponse.json(jobs.slice(0, 60));
     } catch (error) {
-        console.error('Job Fetch Error:', error);
+        console.error('Jobs API error:', error);
         return NextResponse.json([], { status: 500 });
     }
 }
 
-function inferRoleFamily(title: string): string {
-    const t = title.toLowerCase();
-    if (/product/.test(t)) return 'Product';
-    if (/engineer|developer|solidity|backend|frontend|smart contract/.test(t)) return 'Engineering';
-    if (/compliance|aml|kyc/.test(t)) return 'Compliance';
-    if (/legal|counsel|policy/.test(t)) return 'Legal';
-    if (/business development|partnerships|bd\b|sales/.test(t)) return 'BD';
-    if (/treasury|risk|quant/.test(t)) return 'Treasury';
-    if (/design|ux|ui/.test(t)) return 'Design';
-    if (/data|analytics|scientist/.test(t)) return 'Data';
-    if (/operations|ops/.test(t)) return 'Operations';
-    return 'Other';
-}
-
 export async function GET() {
-    return POST(new Request('https://placeholder.com', {
-        method: 'POST',
-        body: JSON.stringify({}),
-    }));
+    return POST(
+        new Request('https://placeholder.com', {
+            method: 'POST',
+            body: JSON.stringify({}),
+        })
+    );
 }
