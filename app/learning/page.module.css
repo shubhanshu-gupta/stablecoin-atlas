@@ -1,95 +1,673 @@
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
+/* ─── Page Layout ─────────────────────────────────────── */
+
+.page {
+    min-height: 100vh;
+    padding-top: 5rem;
 }
 
-.header {
+/* ─── Hero ───────────────────────────────────────────── */
+
+.hero {
     text-align: center;
-    margin-bottom: 4rem;
+    padding: 5rem 2rem 4rem;
+    max-width: 56rem;
+    margin: 0 auto;
 }
 
-.subtitle {
-    font-size: 1.25rem;
+.heroBadge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    border-radius: 99px;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+}
+
+.heroSubtitle {
+    font-size: 1.2rem;
     color: var(--text-secondary);
-    margin-top: 1rem;
-    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    max-width: 42rem;
     margin-left: auto;
     margin-right: auto;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+.heroStats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
 }
 
-.card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 2rem;
+.heroStat {
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
-    border-color: var(--primary);
-}
-
-.card h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-.card p {
+    align-items: center;
+    gap: 0.2rem;
     color: var(--text-secondary);
-    margin-bottom: 2rem;
-    flex-grow: 1;
+    font-size: 0.9rem;
 }
 
-.list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 2rem 0;
+.heroStatNum {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #fff;
+    font-family: var(--font-outfit), sans-serif;
 }
 
-.list li {
-    margin-bottom: 0.75rem;
+/* ─── Sticky Stage Pill Nav ──────────────────────────── */
+
+.stagePillNav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 
-.list a {
-    color: var(--text-primary);
-    text-decoration: none;
+.stagePillNav::-webkit-scrollbar {
+    display: none;
+}
+
+.stagePill {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: color 0.2s;
+    padding: 0.45rem 1rem;
+    border-radius: 99px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    position: relative;
 }
 
-.list a:hover {
-    color: var(--primary);
+.stagePill:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
 }
 
-.cta {
+.stagePillActive {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #a5b4fc;
+}
+
+.stagePillVisited {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.stagePillEmoji {
+    font-size: 1rem;
+}
+
+.stagePillLabel {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.stagePillNum {
+    font-size: 0.65rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.stagePillName {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.stagePillDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+}
+
+/* ─── Stage Sections ─────────────────────────────────── */
+
+.stageSection {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    scroll-margin-top: 3.5rem;
+}
+
+@media (min-width: 640px) {
+    .stageSection {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+.stageHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.stageNum {
+    font-family: var(--font-outfit), sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.06);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.stageTitle {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+}
+
+.stageEmoji {
+    opacity: 0.9;
+}
+
+.stageTagline {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 1rem;
+}
+
+.stageDesc {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 50rem;
+    margin-bottom: 2.5rem;
+}
+
+/* ─── Topic Clusters ─────────────────────────────────── */
+
+.topicClusters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.topicCluster {
+    padding: 0.3rem 0.85rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+/* ─── Resource Grid & Cards ──────────────────────────── */
+
+.resourceGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.resourceCard {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.resourceCard:hover {
+    background: rgba(255, 255, 255, 0.055);
+    border-color: rgba(255, 255, 255, 0.13);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+.resourceTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.typeBadge {
     display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid transparent;
+}
+
+.readTime {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.resourceTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.resourceDesc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.resourceSource {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.resourceActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.resourceLink {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--primary);
     text-decoration: none;
-    font-weight: 500;
-    margin-top: auto;
+    transition: opacity 0.2s;
 }
 
-.cta:hover {
-    text-decoration: underline;
+.resourceLink:hover {
+    opacity: 0.8;
 }
 
-.disabledCta {
+.saveBtn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
     color: var(--text-muted);
+    padding: 0.3rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.saveBtn:hover {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.saveBtnActive {
+    color: #f59e0b;
+}
+
+/* ─── Module Blocks (Stage 3) ────────────────────────── */
+
+.moduleBlock {
+    margin-bottom: 3rem;
+}
+
+.moduleLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.moduleLabelIcon {
+    font-size: 1.1rem;
+}
+
+/* ─── Quiz ───────────────────────────────────────────── */
+
+.quizCard {
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 680px;
+}
+
+.quizProgress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.quizProgressText {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.quizProgressBar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.quizProgressFill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+
+.quizQuestion {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+}
+
+.quizOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.quizOption {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.2rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.95rem;
+    transition: all 0.18s ease;
+    width: 100%;
+}
+
+.quizOption:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.quizOption:disabled {
+    cursor: default;
+}
+
+.quizCorrect {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    color: #6ee7b7 !important;
+}
+
+.quizWrong {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.35) !important;
+    color: #fca5a5 !important;
+}
+
+.quizOptionLetter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.07);
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.quizExplanation {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
     font-size: 0.9rem;
-    margin-top: auto;
-    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.quizExplanation strong {
+    color: #fff;
+}
+
+.quizNextBtn {
+    padding: 0.65rem 1.5rem;
+    background: linear-gradient(90deg, var(--primary), #a855f7);
+    color: #fff;
+    border: none;
+    border-radius: 99px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.quizNextBtn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.quizDone {
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    max-width: 480px;
+    text-align: center;
+}
+
+.quizScore {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 1rem;
+}
+
+.quizScoreLabel {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.quizRetryBtn {
+    padding: 0.65rem 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-radius: 99px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.quizRetryBtn:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+/* ─── Playbook Cards ─────────────────────────────────── */
+
+.playbookGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.playbookCard {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.playbookCard:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px -6px rgba(99, 102, 241, 0.25);
+}
+
+.playbookFlags {
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+}
+
+.playbookLabel {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+}
+
+.playbookDesc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.playbookCta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-top: 0.5rem;
+}
+
+/* ─── Community Submission CTA ───────────────────────── */
+
+.submissionCta {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+}
+
+@media (min-width: 640px) {
+    .submissionCta {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+.submissionCtaInner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 2rem 2rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.08) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
+}
+
+@media (min-width: 640px) {
+    .submissionCtaInner {
+        flex-direction: row;
+        align-items: center;
+        gap: 2rem;
+    }
+}
+
+.submissionCtaIcon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.submissionCtaText {
+    flex: 1;
+}
+
+.submissionCtaText h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.submissionCtaText p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.submissionCtaBtn {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    background: linear-gradient(90deg, var(--primary), #a855f7);
+    color: #fff;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.submissionCtaBtn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    opacity: 1;
 }
