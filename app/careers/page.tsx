@@ -57,8 +57,7 @@ export default function CareersPage() {
         async function fetchJobs() {
             setLoading(true);
             try {
-                const query = [activeRoleFamily, searchKeyword].filter(Boolean).join(' ') ||
-                    'stablecoin compliance blockchain crypto payments defi web3';
+                const query = [activeRoleFamily, searchKeyword].filter(Boolean).join(' ');
                 const res = await fetch('/api/jobs', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
