@@ -42,18 +42,19 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Feature Grid Mockup */}
+        {/* Feature Grid */}
         <div className={styles.featureGrid}>
           {[
-            { title: "Understand", desc: "Stay updated with the latest news and ecosystem developments." },
-            { title: "Learn", desc: "Master the basics to advanced concepts of stablecoins." },
-            { title: "Careers", desc: "Find your next role in the growing stablecoin industry." },
-            { title: "Real Life", desc: "Practical guides on using stablecoins for payments and more." }
+            { title: "Learn", desc: "Master from the basics to advanced mechanics of stablecoins.", href: "/learning" },
+            { title: "Latest", desc: "Get the latest pulse, news, and ecosystem developments.", href: "/latest" },
+            { title: "Careers", desc: "Find your next role in the growing stablecoin industry.", href: "/careers" }
           ].map((feature, i) => (
-            <div key={i} className={`glass-panel ${styles.featureCard}`}>
-              <h3 className={styles.featureTitle}>{feature.title}</h3>
+            <Link href={feature.href} key={i} className={`glass-panel ${styles.featureCard}`}>
+              <h3 className={styles.featureTitle}>
+                {feature.title} <span className={styles.arrow}>&rarr;</span>
+              </h3>
               <p className={styles.featureDesc}>{feature.desc}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </main>
