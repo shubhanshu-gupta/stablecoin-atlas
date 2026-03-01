@@ -15,24 +15,44 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Stablecoin Atlas",
-  description: "Your guide to understanding, learning, and working in the stablecoin ecosystem.",
+  title: {
+    template: "%s | Stablecoin Atlas",
+    default: "Stablecoin Atlas - Cryptocurrency, Finance & Digital Assets",
+  },
+  description: "Stablecoin Atlas is your comprehensive guide to understanding, learning, and working within the stablecoin, cryptocurrency, finance, and digital asset ecosystem.",
+  keywords: ["stablecoin", "cryptocurrency", "finance", "digital assets", "blockchain", "crypto", "defi", "web3 payments"],
 };
+
+import { CSPostHogProvider } from "./providers";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Stablecoin Atlas",
+    url: "https://stablecoinatlas.com/",
+    description: "Your guide to understanding, learning, and working in the stablecoin and cryptocurrency ecosystem.",
+  };
+
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${outfit.variable} flex flex-col min-h-screen`}>
-        <Navbar />
-        <div className="flex-1">
-          {children}
-        </div>
-        <Footer />
-      </body>
+      <CSPostHogProvider>
+        <body className={`${inter.variable} ${outfit.variable} flex flex-col min-h-screen`}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <Navbar />
+          <div className="flex-1">
+            {children}
+          </div>
+          <Footer />
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
