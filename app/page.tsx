@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./page.module.css";
+import { StablecoinDashboard } from "../components/dashboard/StablecoinDashboard";
 
 export default function Home() {
   return (
@@ -41,6 +42,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
+        {/* Dashboard Section */}
+        <StablecoinDashboard />
 
         {/* Feature Grid */}
         <div className={styles.featureGrid}>

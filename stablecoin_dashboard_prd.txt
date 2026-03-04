@@ -1,0 +1,587 @@
+
+STABLECOIN ATLAS
+Product Requirements Document
+Feature: Stablecoin Market Dashboard
+Homepage Hook  ·  v1.0  ·  For Antigravity  ·  March 2026
+
+
+This PRD specifies the Stablecoin Market Dashboard — a live data panel that lives on the homepage of stablecoinatlas.app. It is the platform's 'daily hook': a reason for professionals, learners, and casual observers to return every day. All data is sourced from free, no-auth-required public APIs (primarily DeFiLlama Stablecoins API). No paid data subscriptions are required for MVP.
+
+1. Overview
+
+1.1  Problem Statement
+The stablecoinatlas.app homepage currently shows a static hero section with three navigation links. There is no live data, no reason to return daily, and no immediate 'wow' moment for a first-time visitor. A professional who lands on the page for the first time sees a marketing page — not a tool.
+
+The homepage needs a hook: something that communicates, in under five seconds, that this is the most useful single place to understand the stablecoin ecosystem right now.
+
+1.2  Solution
+A live Stablecoin Market Dashboard embedded directly on the homepage, above the fold on desktop and as the first scroll section on mobile. It surfaces the metrics that stablecoin professionals actually care about — total supply, supply trends, issuer dominance, chain distribution, and peg health — all updating in real time from DeFiLlama's free public API.
+
+Design reference: Think Bloomberg terminal meets a clean fintech dashboard. Data-dense enough to be useful to a compliance officer or product manager. Clean enough that a curious newcomer can understand it without explanation.
+
+1.3  Goals
+PRIMARY GOALS
+	•	Give every visitor — expert or newcomer — an immediate, live signal about the stablecoin market.
+	•	Create a daily return habit: professionals check the dashboard like they check Bloomberg or Dune.
+	•	Establish Stablecoin Atlas as a credible, data-driven platform, not just an editorial site.
+SECONDARY GOALS
+	•	Drive deeper engagement: each metric should link to a relevant page (Learn, Latest, entity pages).
+	•	SEO benefit: live data pages earn backlinks and rank for high-intent queries like 'stablecoin market cap'.
+
+1.4  Non-Goals (MVP)
+	•	No trading functionality, price prediction, or yield data.
+	•	No user accounts or personalised watchlists (v2).
+	•	No push/email alerts for market movements (v2).
+	•	No historical chart builder or custom date ranges on the homepage (v2 — link to dedicated /dashboard).
+	•	No paid data sources required for MVP.
+
+2. User Segments & Jobs To Be Done
+
+
+Segment
+What they want from the dashboard
+Key metric they care about
+FinTech / crypto professional
+A quick daily read on supply trends, issuer moves, and chain growth. Something they can share in a Slack message.
+Total supply change (7d), issuer market share
+Compliance / legal professional
+Is the market growing? Which issuers are gaining regulated status? What's happening by jurisdiction?
+Issuer regulatory status, jurisdiction breakdown
+Product / BD manager
+Which chains are gaining stablecoin liquidity? Which corridors are most active?
+Chain distribution, 30d supply change by chain
+Curious learner / newcomer
+What is the scale of stablecoins? How big is this actually?
+Total supply headline number, top 5 coins
+Journalist / researcher
+A trusted, citable source of stablecoin market data with source attribution.
+Supply chart, issuer breakdown with evidence links
+
+Every metric shown must serve at least two of these segments. If a metric only matters to one, it is a candidate for the /dashboard deep-dive page, not the homepage.
+
+3. Data Sources & API Specification
+
+3.1  Primary Source: DeFiLlama Stablecoins API
+DeFiLlama's Stablecoins API is free, requires no API key, and is the most comprehensive open source of stablecoin on-chain supply data. It is used by The Block, Messari, and major crypto research firms. Attribution is required (DeFiLlama citation in dashboard footer).
+
+Base URL: https://stablecoins.llama.fi  ·  Rate limit: ~300 req/min (free tier)  ·  No API key required  ·  CORS-friendly (can call from frontend or backend)
+
+3.2  API Endpoints — MVP
+
+Endpoint
+Method
+What it returns
+Used for
+Caching TTL
+/stablecoins?includePrices=true
+GET
+All stablecoins: name, symbol, circulating supply by chain, current peg price, peg type, issuer
+Leaderboard, peg health, chain distribution
+1 hour
+/stablecoincharts/all
+GET
+Historical total mcap of all stablecoins combined (daily data points)
+Total supply trend chart
+1 hour
+/stablecoinchains
+GET
+Total stablecoin supply broken down by chain
+Chain distribution donut chart
+1 hour
+/stablecoin/{id}
+GET
+Full history for a single stablecoin including per-chain circulation
+Per-coin detail (linked from leaderboard)
+1 hour
+/stablecoinprices
+GET
+Historical peg prices for all stablecoins
+Peg deviation detection
+1 hour
+
+3.3  Data Caching Strategy
+Raw API calls must NOT be made from the browser on every page load. The following caching architecture is required:
+
+	•	A server-side cron job (or Vercel/Netlify scheduled function) fetches from DeFiLlama every 60 minutes and stores the response in a lightweight cache (Redis, KV store, or even a JSON file in a CDN edge cache).
+	•	The frontend requests data from this cached layer (/api/dashboard), not directly from DeFiLlama.
+	•	Cache TTL: 60 minutes for supply data. 24 hours for historical chart data (it doesn't change intraday).
+	•	Show a 'Last updated: X minutes ago' timestamp on the dashboard so users know data freshness.
+	•	Stale-while-revalidate pattern: serve cached data instantly, refresh in background.
+
+3.4  Supplementary Source: CoinGecko (optional, v1.1)
+For 24h trading volume and exchange data per stablecoin, CoinGecko's free tier can be used (50 calls/minute, no auth required). This is not required for MVP but can be layered in for the leaderboard's 'Volume' column in v1.1.
+
+4. Dashboard Modules — Detailed Specification
+
+The dashboard is composed of five distinct modules arranged on the homepage. All five load as a single section between the hero and the existing feature cards. On desktop they sit in a responsive grid. On mobile they stack vertically.
+
+Module order (top to bottom / left to right): [1] Headline KPIs → [2] Supply Trend Chart → [3] Issuer Leaderboard → [4] Chain Distribution → [5] Peg Health Monitor.
+
+MODULE 1  —  Headline KPI Strip
+
+Purpose
+Four large-format number cards that communicate the scale and momentum of the stablecoin market at a glance. This is the first thing a visitor reads. It must be scannable in under 3 seconds.
+
+KPI Cards — specification
+
+Card
+Metric displayed
+API source field
+Format
+Delta shown
+Total Stablecoin Supply
+Sum of all circulating stablecoin supply in USD
+/stablecoins → sum all peggedUSD values
+$XXX.XXB
+vs. 7d ago (↑↓ %)
+Number of Stablecoins
+Count of distinct stablecoins tracked
+/stablecoins → array length
+XXX
+vs. 30d ago (↑↓ N)
+Largest Issuer Share
+Market share % of the #1 stablecoin (USDT)
+/stablecoins → top coin / total
+XX.X%
+vs. 30d ago (↑↓ %)
+Active Chains
+Number of chains with >$100M stablecoin supply
+/stablecoinchains → filter by threshold
+XX chains
+Static label: 'with >$100M supply'
+
+Visual design
+	•	Each card: large number (48px bold), label below (14px gray), delta badge (green/red chip, 12px).
+	•	Cards sit in a 4-column grid on desktop, 2×2 on tablet, 1-column stack on mobile.
+	•	Background: white cards with a subtle border. No colour fills on cards — colour is reserved for the delta badges.
+	•	Delta badges: green with ↑ for positive supply growth, red with ↓ for contraction. Amber for flat (±0.5%).
+
+MODULE 1 — Wireframe (desktop, 4-column strip)
+   ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+   │ Total Supply    │ │ # Stablecoins   │ │ Top Issuer Share│ │  Active Chains  │
+   │                 │ │                 │ │                 │ │                 │
+   │  $238.4B        │ │    182          │ │   USDT  67.2%   │ │   14 chains     │
+   │  ↑ +3.2% (7d)  │ │  ↑ +4 (30d)     │ │  ↓ -0.8% (30d) │ │  >$100M supply  │
+   └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
+
+MODULE 2  —  Total Supply Trend Chart
+
+Purpose
+An area/line chart showing total stablecoin market cap over time. This gives context to the headline KPI — is the market growing, contracting, or recovering? The 2022 UST crash, 2023 BUSD de-listing, and 2024 bull market growth should be visible and labelled.
+
+Chart specification
+	•	Chart type: area chart with a gradient fill (blue at line, fading to transparent at baseline).
+	•	X-axis: time (daily data points). Default view: 1 year. Toggle buttons for: 3M / 6M / 1Y / All time.
+	•	Y-axis: USD billions, auto-scaled.
+	•	Hover tooltip: exact date + total supply in $B + % from previous period.
+	•	Annotations: 2–3 key events marked with a vertical dashed line and label (e.g. 'UST Collapse — May 2022', 'BUSD Wind-down — Feb 2023'). These are hard-coded editorial annotations, not dynamic.
+	•	Data source: GET /stablecoincharts/all — returns array of {date, totalCirculatingUSD} objects.
+	•	Library recommendation: Recharts (if React) or Chart.js. Both are lightweight and handle time-series well.
+
+Period toggle buttons
+Button label
+Data window
+Notes
+3M
+Last 90 days of daily data
+Good for spotting recent momentum
+6M
+Last 180 days
+Default selected state on page load
+1Y
+Last 365 days
+Shows full recent cycle
+All
+Full history from DeFiLlama
+Shows from ~2019; includes UST crash annotation
+
+MODULE 2 — Wireframe
+     Total Stablecoin Supply (USD)                     [3M] [6M] [1Y] [All]
+     $250B ┤
+     $230B ┤     ╭─────────────────────────────────────────────────
+     $210B ┤╭────╯                                          ↑ gradient fill
+     $190B ┤│
+     $170B ┤╯
+            Jan    Mar    May    Jul    Sep    Nov    Jan    Mar
+                                 ↑ hover tooltip: 'Nov 14 · $228.3B'
+
+MODULE 3  —  Issuer Leaderboard
+
+Purpose
+A ranked table of the top 10 stablecoins by circulating supply. This is the module that professionals will scan daily — it shows issuer dominance, momentum, and which coins are gaining or losing ground.
+
+Table columns — specification
+Column
+Data shown
+Source field
+Format
+Rank
+1–10 ranking by current supply
+Sorted by peggedUSD descending
+# integer
+Name
+Stablecoin name + symbol
+name, symbol
+USDT · Tether
+Peg
+Peg currency
+pegType (peggedUSD / peggedEUR / etc.)
+🇺🇸 USD / 🇪🇺 EUR
+Market Cap
+Current circulating supply in USD
+peggedUSD (current)
+$XXX.XB
+7d Change
+Supply change vs. 7 days ago
+Diff of current vs. 7d historical
+↑ +2.1% (green) / ↓ -1.3% (red)
+30d Change
+Supply change vs. 30 days ago
+Diff of current vs. 30d historical
+↑ +8.4%
+Chains
+Number of chains it is deployed on
+Count of chainCirculations keys
+12 chains
+
+Leaderboard UX rules
+	•	Rows 1–10 are shown by default. A 'View all stablecoins' link below the table links to a future /stablecoins directory page.
+	•	Clicking any row expands an inline detail panel (accordion) showing: chain breakdown, issuer name, peg type, DeFiLlama data link.
+	•	No external links to exchanges or trading platforms. Clicking a row stays on-site.
+	•	A small 'Regulated' badge appears next to coins that are flagged in the internal Stablecoin entity data (USDC, EURC, XSGD — manually maintained list for MVP).
+	•	The table is sortable by: Market Cap (default), 7d Change, 30d Change, Chains.
+
+MODULE 3 — Wireframe
+     # │ Name          │    Peg │  Market Cap │  7d Chg │ 30d Chg │ Chains
+     ──────────────────────────────────────────────────────────────────────
+     1  │ USDT  Tether  │ 🇺🇸 USD │   $142.1B   │ +0.8%↑  │  +4.2%↑ │  15
+     2  │ USDC  Circle  │ 🇺🇸 USD │    $56.3B   │ +2.1%↑  │  +9.1%↑ │  12
+     3  │ DAI   Sky     │ 🇺🇸 USD │    $10.2B   │ -0.3%↓  │  -1.2%↓ │   8
+     ...│               │        │             │         │         │   
+     [View all stablecoins →]
+
+MODULE 4  —  Chain Distribution
+
+Purpose
+Shows how stablecoin supply is distributed across blockchain networks. This matters to product managers, engineers, and BD teams who need to know where liquidity actually lives. It is also the clearest indicator of which chains are 'winning' as stablecoin rails.
+
+Visualisation specification
+	•	Primary: horizontal bar chart (easier to read chain names than a donut on mobile).
+	•	Secondary toggle: donut chart view (for users who want relative proportions).
+	•	Show top 8 chains by supply. Remaining chains are grouped as 'Others (N chains)'.
+	•	Each bar: chain name (left label), supply in $B (right label), percentage of total (inside bar or tooltip).
+	•	Colour coding: one distinct colour per chain (Ethereum = purple, Tron = red, Solana = green, etc.). Consistent with any future entity pages.
+	•	Data source: GET /stablecoinchains — returns array of {name, totalCirculatingUSD}.
+	•	Clicking a chain bar: links to a future /chains/[chain-name] entity page. For MVP, opens a DeFiLlama chain page in a new tab.
+
+MODULE 4 — Wireframe (horizontal bars)
+     Chain Distribution                          [Bar] [Donut]
+     Ethereum  ████████████████████████████████  $108B  44%
+     Tron      ██████████████████████            $80B   32%
+     Solana    ████████                          $22B    9%
+     BSC       ████                              $14B    6%
+     Base      ██                                $7B     3%
+     Others    ██                                $8B     3%  (11 chains)
+
+MODULE 5  —  Peg Health Monitor
+
+Purpose
+Shows whether major stablecoins are trading at their intended peg. A stablecoin at $0.97 USD is significant news. This module makes Stablecoin Atlas uniquely useful in moments of market stress — when it matters most, professionals will check here first.
+
+What is shown
+	•	Top 10 stablecoins by supply, each showing: current price, deviation from peg (in cents and percentage), status badge.
+	•	Status badges: ON PEG (within ±0.5%) shown in green, WATCH (±0.5–1.0%) in amber, DEPEG ALERT (>1.0%) in red.
+	•	Price data: sourced from /stablecoins?includePrices=true — the price field per stablecoin.
+	•	'Last updated' timestamp is shown prominently. Refreshes every 60 minutes.
+
+Depeg alert behaviour
+	•	If any stablecoin in the top 10 shows >1% deviation: the module header colour changes from neutral to red, and a banner appears: '[Coin name] is showing a peg deviation of X%. Monitor closely.'
+	•	No push notifications in MVP. Alert is visual only.
+	•	The banner links to the Latest section filtered for the relevant stablecoin — so users can see if there's news context.
+Important: include a disclaimer inline: 'Price data is sourced from DeFiLlama and reflects on-chain oracle prices. It may differ from centralised exchange prices. This is not financial advice.'
+
+MODULE 5 — Wireframe
+     Peg Health Monitor                    Last updated: 14 mins ago
+     ──────────────────────────────────────────────────────────────
+     USDT   $1.001  +0.10%   ● ON PEG
+     USDC   $0.999  -0.10%   ● ON PEG
+     DAI    $1.000   0.00%   ● ON PEG
+     FRAX   $0.994  -0.60%   ◉ WATCH
+     TUSD   $0.981  -1.90%   ⚠ DEPEG ALERT  ← row highlighted red
+     ...
+     [Price data: DeFiLlama · Not financial advice]
+
+5. Page Layout & UX Requirements
+
+5.1  Homepage Structure (revised)
+The dashboard replaces the current 'static three cards' section and is inserted as the second section, immediately below the hero headline. The revised homepage structure is:
+
+Section
+Content
+Position
+Hero
+Headline + subline + two CTAs (Start Learning, Latest News) — unchanged
+Top
+Dashboard
+MODULE 1–5 as specified in §4 — NEW
+Above fold on desktop
+Feature cards
+Learn / Latest / Careers navigation cards — existing, kept
+Below dashboard
+Footer
+Existing footer — unchanged
+Bottom
+
+5.2  Responsive Layout
+Viewport
+Module 1
+Modules 2+3
+Modules 4+5
+Desktop (≥1280px)
+4-column KPI strip
+Side by side (chart 60%, leaderboard 40%)
+Side by side (50/50)
+Tablet (768–1279px)
+2×2 KPI grid
+Chart full width, leaderboard below
+Side by side (50/50)
+Mobile (<768px)
+1-column KPI stack
+Chart full width, leaderboard below
+Chain bar chart full width, peg monitor below
+
+5.3  Loading States
+	•	All modules show a skeleton loader (pulsing grey placeholder) while data is fetching.
+	•	If the API call fails or returns a network error: show a non-alarming fallback state — 'Data temporarily unavailable. Refresh to try again.' Do not show a broken/empty chart.
+	•	Initial data load target: under 800ms (cached response from /api/dashboard endpoint).
+
+5.4  Attribution & Disclaimer
+	•	A single line below the dashboard: 'Market data powered by DeFiLlama · Updated hourly · Not financial advice'.
+	•	'DeFiLlama' is a hyperlink to defillama.com. This is required by DeFiLlama's attribution expectation.
+	•	The existing site-wide disclaimer in the footer is sufficient — no additional disclaimer block needed within the dashboard itself, except for the Peg Health module (see §4, Module 5).
+
+5.5  Section Header
+	•	The dashboard section has a header: 'Market Snapshot' (left-aligned, H2 size).
+	•	Subline: 'Live data on stablecoin supply, issuers, and network distribution. Updated hourly.' (gray, 14px).
+	•	A 'Last updated: X min ago' timestamp (right-aligned, 12px gray) syncs with the cache timestamp.
+
+6. Technical Requirements
+
+6.1  Data Pipeline
+	•	Create a server-side endpoint: GET /api/dashboard — returns all dashboard data in one payload.
+	•	This endpoint fetches from DeFiLlama on a schedule (cron or on-demand with cache-first strategy).
+	•	Response shape: { kpis: {...}, supplyHistory: [...], leaderboard: [...], chainDistribution: [...], pegHealth: [...], lastUpdatedAt: timestamp }
+	•	Cache the full response for 60 minutes. Use stale-while-revalidate: return cached data instantly, refresh in background.
+	•	The frontend calls /api/dashboard once on page load. No individual component-level API calls.
+
+6.2  Derived Calculations
+The following values are not returned directly by DeFiLlama — they must be computed server-side:
+Metric
+Calculation
+Notes
+Total supply
+Sum of all stablecoin peggedUSD fields
+Filter out coins with peggedUSD < 1000 (dust)
+7-day change
+Compare latest peggedUSD to peggedUSD from 7 days ago in /stablecoin/{id} history
+Store previous snapshots in cache
+30-day change
+Same as above using 30-day-old snapshot
+Same approach
+Largest issuer share %
+Top coin peggedUSD / total supply × 100
+Use #1 coin after ranking
+Active chains count
+Filter /stablecoinchains where totalCirculatingUSD > 100,000,000
+Threshold: $100M
+Peg deviation
+abs(price - 1.0) for USD pegs, abs(price - targetRate) for others
+Flag >0.5% as WATCH, >1% as ALERT
+
+6.3  Performance Requirements
+Metric
+Target
+Time to first contentful paint (homepage)
+< 1.5 seconds
+Dashboard data load (from cache)
+< 800ms
+Dashboard data load (cache miss / cold)
+< 4 seconds
+Lighthouse Performance score
+> 85
+Charts render time (after data received)
+< 300ms
+
+6.4  Technology Recommendations
+Component
+Recommendation
+Rationale
+Chart library
+Recharts (if React) or Chart.js
+Lightweight, good TypeScript support, SSR-compatible
+Caching
+Vercel KV / Upstash Redis / or file-based JSON on edge
+Matches likely hosting environment (Netlify/Vercel)
+Scheduled refresh
+Vercel Cron / Netlify Scheduled Functions / GitHub Actions
+No additional infrastructure needed
+Data fetching pattern
+SWR or React Query on frontend
+Handles stale-while-revalidate natively
+Number formatting
+Intl.NumberFormat or Numeral.js
+Consistent $238.4B format across all modules
+
+7. Phased Delivery Plan
+
+
+Phase
+Scope
+What ships
+Estimated effort
+MVP (v1.0)
+All 5 modules, desktop + mobile layout
+KPI strip, supply chart (1Y default), leaderboard (top 10, no sorting), chain distribution (bar chart), peg health (visual badges). No depeg alert banner.
+2–3 weeks
+v1.1
+Leaderboard enhancements
+Column sorting, row expand/accordion, 'Regulated' badge from internal data, 30d change column added.
+1 week
+v1.2
+Chart enhancements
+Period toggle (3M/6M/1Y/All), editorial annotations (UST collapse etc.), donut chart toggle for chains.
+1 week
+v1.3
+Alert system
+Depeg alert banner (visual), banner links to Latest feed filtered by coin. 'Last updated' auto-refreshes every 60 min without page reload.
+1 week
+v2.0
+Personalisation
+User accounts, watchlist (follow specific stablecoins), email alerts for depeg events >2%.
+Future sprint
+
+Recommendation to Antigravity: ship MVP (v1.0) as the first PR. All 5 modules, functional but with minimal interactivity. Then iterate with v1.1–v1.3 in subsequent sprints. Do not hold MVP for sorting or period toggles.
+
+8. Success Metrics
+
+
+Metric
+Target (60 days post-launch)
+How to measure
+Homepage session duration
++40% vs. pre-dashboard baseline
+Analytics: avg. time on page
+Homepage → internal nav rate
+>50% of dashboard viewers click into Learn, Latest, or Careers
+Click events on module CTAs
+Return visit rate (7-day)
+>25% of homepage visitors return within 7 days
+Analytics: new vs. returning
+Dashboard section scroll rate
+>70% of homepage visitors scroll to see Module 3 (leaderboard)
+Scroll depth tracking
+Leaderboard row clicks
+>15% CTR on leaderboard rows
+Click event on table rows
+Direct traffic share
++5pp increase in direct traffic (bookmark/type-in)
+Traffic source breakdown
+Backlinks earned
+>10 new backlinks citing the dashboard within 60 days
+Ahrefs / manual tracking
+
+The most important leading indicator is homepage session duration. If it increases, the dashboard is creating value. If it stays flat, revisit which modules are below the fold and not being seen.
+
+9. Open Questions for Antigravity
+
+
+#
+Question
+Decision needed by
+Impact if unresolved
+1
+What is the current hosting environment — Netlify or Vercel? This determines the caching/cron approach.
+Before build starts
+High — affects entire data pipeline
+2
+Is there already a backend / API layer, or is this currently a purely static frontend?
+Before build starts
+High — determines where cron and cache live
+3
+Which charting library is already in the codebase, if any?
+Sprint 1
+Medium — avoids adding a duplicate dependency
+4
+Should the 'Regulated' badge in the leaderboard pull from the existing internal stablecoin data model (from the previous PRD), or is this a new manual list?
+Before v1.1
+Low — editorial decision
+5
+Should chart historical data be stored/accumulated (to build our own dataset over time), or always fetched fresh from DeFiLlama?
+Before v1.0 ships
+Medium — affects data ownership strategy
+6
+Who owns the editorial annotations on the supply chart (UST crash, BUSD etc.)? Format: hardcoded JSON array in codebase or CMS-editable?
+Before v1.2
+Low — editorial preference
+
+Appendix — Quick Reference
+
+A. DeFiLlama API Quick Reference
+
+Endpoint
+Full URL
+Auth needed?
+Rate limit
+All stablecoins
+https://stablecoins.llama.fi/stablecoins?includePrices=true
+None
+~300/min
+Total supply history
+https://stablecoins.llama.fi/stablecoincharts/all
+None
+~300/min
+Chain distribution
+https://stablecoins.llama.fi/stablecoinchains
+None
+~300/min
+Single coin history
+https://stablecoins.llama.fi/stablecoin/{id}
+None
+~300/min
+Peg prices history
+https://stablecoins.llama.fi/stablecoinprices
+None
+~300/min
+
+B. Key Stablecoin IDs (DeFiLlama)
+These IDs are used in the /stablecoin/{id} endpoint. Others can be discovered from the /stablecoins response.
+
+Stablecoin
+Symbol
+DeFiLlama ID
+Tether
+USDT
+1
+USD Coin
+USDC
+2
+DAI / USDS
+DAI
+5
+TrueUSD
+TUSD
+6
+PayPal USD
+PYUSD
+161
+Frax
+FRAX
+13
+EURC (Circle)
+EURC
+Use /stablecoins response to confirm current ID
+XSGD (StraitsX)
+XSGD
+Use /stablecoins response to confirm current ID
+
+Note: DeFiLlama IDs are stable but confirm from the /stablecoins response when building, as new coins are added and IDs shift occasionally.
