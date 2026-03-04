@@ -4,19 +4,21 @@ export const revalidate = 3600; // Cache for 60 minutes
 
 export async function GET() {
     try {
-        const [stablecoinsRes, chartsRes, chainsRes] = await Promise.all([
+        const [stablecoinsRes, chartsRes, chainsRes, cgRes] = await Promise.all([
             fetch('https://stablecoins.llama.fi/stablecoins?includePrices=true', { next: { revalidate: 3600 } }),
             fetch('https://stablecoins.llama.fi/stablecoincharts/all', { next: { revalidate: 3600 } }),
             fetch('https://stablecoins.llama.fi/stablecoinchains', { next: { revalidate: 3600 } }),
+            fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=stablecoins&per_page=50', { next: { revalidate: 3600 } })
         ]);
 
-        if (!stablecoinsRes.ok || !chartsRes.ok || !chainsRes.ok) {
-            throw new Error('Failed to fetch from DeFiLlama');
+        if (!stablecoinsRes.ok || !chartsRes.ok || !chainsRes.ok || !cgRes.ok) {
+            throw new Error('Failed to fetch from APIs');
         }
 
         const stablecoins = await stablecoinsRes.json();
         const chartsAll = await chartsRes.json();
         const chainsAll = await chainsRes.json();
+        const cgData = await cgRes.json();
 
         // 1. Process KPIs
         const validCoins = stablecoins.peggedAssets?.filter((c: any) => c.circulating?.peggedUSD >= 1000) || [];
@@ -71,7 +73,43 @@ export async function GET() {
 
         // 3. Leaderboard
         const top10Coins = validCoins.slice(0, 10);
-        const leaderboard = top10Coins.map((coin: any) => {
+
+        // Fetch historical data for top 10 coins
+        const coinHistories = await Promise.all(
+            top10Coins.map((coin: any) =>
+                fetch(`https://stablecoins.llama.fi/stablecoin/${coin.id}`, { next: { revalidate: 3600 } })
+                    .then(res => res.json())
+                    .catch(() => null)
+            )
+        );
+
+        const leaderboard = top10Coins.map((coin: any, index: number) => {
+            // Find volume from CoinGecko
+            const cgCoin = cgData.find((c: any) => c.symbol.toLowerCase() === coin.symbol.toLowerCase());
+            const volume24h = cgCoin ? cgCoin.total_volume : null;
+
+            // Calculate 7d and 30d change
+            const history = coinHistories[index];
+            let change7d = null;
+            let change30d = null;
+
+            if (history && history.tokens && history.tokens.length > 0) {
+                const currentSupply = coin.circulating?.peggedUSD || 0;
+
+                // tokens array usually has daily snapshots
+                const tokens = history.tokens;
+                const token7dAgo = tokens.length >= 8 ? tokens[tokens.length - 8].circulating?.peggedUSD : null;
+                const token30dAgo = tokens.length >= 31 ? tokens[tokens.length - 31].circulating?.peggedUSD : null;
+
+                if (token7dAgo && token7dAgo > 0) {
+                    change7d = ((currentSupply - token7dAgo) / token7dAgo) * 100;
+                }
+
+                if (token30dAgo && token30dAgo > 0) {
+                    change30d = ((currentSupply - token30dAgo) / token30dAgo) * 100;
+                }
+            }
+
             return {
                 id: coin.id,
                 symbol: coin.symbol,
@@ -80,6 +118,9 @@ export async function GET() {
                 marketCap: coin.circulating?.peggedUSD || 0,
                 chains: Object.keys(coin.chainBalances || {}).length,
                 price: coin.price || null,
+                volume24h,
+                change7d,
+                change30d
             };
         });
 
