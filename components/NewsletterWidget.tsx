@@ -132,7 +132,8 @@ const sharedStyles = `
     line-height: 1.65;
     color: ${C.gray};
     margin-bottom: 32px;
-    max-width: 600px;
+    max-width: 100%;
+    text-align: center;
   }
 
   /* ── Benefits grid ── */
@@ -545,7 +546,7 @@ export function InlineSubscribe({ source = 'inline_homepage' }: { source?: strin
         {!done ? (
           <>
             <div className="sa-eyebrow">Weekly digest</div>
-            <h2 className="sa-headline">
+            <h2 className="sa-headline" style={{ textAlign: 'center' }}>
               The stablecoin week,<br /><em>in five minutes.</em>
             </h2>
             <p className="sa-subline">
@@ -576,7 +577,7 @@ export function InlineSubscribe({ source = 'inline_homepage' }: { source?: strin
                 {error && <span style={{ color: '#F87171', fontSize: '12px', marginTop: '4px' }}>{error}</span>}
               </div>
               <button className="sa-btn" type="submit" disabled={loading}>
-                {loading ? "Subscribing…" : "Subscribe — it's free"}
+                {loading ? "Subscribing…" : "Get the weekly digest"}
               </button>
             </form>
 
@@ -676,7 +677,7 @@ export function StickySubscribeBar() {
               {error && <span style={{ color: '#F87171', fontSize: '12px', marginTop: '2px', position: 'absolute', bottom: '-20px' }}>{error}</span>}
             </div>
             <button className="sa-sticky-btn" type="submit" disabled={loading}>
-              {loading ? "…" : "Subscribe free"}
+              {loading ? "…" : "Get the digest"}
             </button>
           </form>
         )}
@@ -767,7 +768,7 @@ export function SubscribeModal({ onClose, isOpen = false, source = 'modal_nav' }
                   {error && <span style={{ color: '#F87171', fontSize: '12px', marginTop: '4px' }}>{error}</span>}
                 </div>
                 <button className="sa-btn" type="submit" disabled={loading}>
-                  {loading ? "Subscribing…" : "Subscribe free"}
+                  {loading ? "Subscribing…" : "Get the digest"}
                 </button>
               </form>
 
