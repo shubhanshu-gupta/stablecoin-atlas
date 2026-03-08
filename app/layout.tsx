@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 import { CSPostHogProvider } from "./providers";
+import { StickySubscribeBar } from "@/components/NewsletterWidget";
 
 export default function RootLayout({
   children,
@@ -51,6 +52,7 @@ export default function RootLayout({
             {children}
           </div>
           <Footer />
+          <StickySubscribeBar />
         </body>
       </CSPostHogProvider>
     </html>

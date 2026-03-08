@@ -154,3 +154,25 @@
         display: none;
     }
 }
+
+/* ── Navbar Subscribe CTA pill ── */
+.subscribeBtn {
+    background: rgba(26, 86, 219, 0.15);
+    color: #60A5FA;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.subscribeBtn:hover {
+    background: rgba(26, 86, 219, 0.3);
+    border-color: rgba(96, 165, 250, 0.6);
+    color: #fff;
+}

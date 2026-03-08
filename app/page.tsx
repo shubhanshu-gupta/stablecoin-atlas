@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import { StablecoinDashboard } from "../components/dashboard/StablecoinDashboard";
+import { InlineSubscribe } from "../components/NewsletterWidget";
 
 export default function Home() {
   return (
@@ -45,6 +46,11 @@ export default function Home() {
 
         {/* Dashboard Section */}
         <StablecoinDashboard />
+
+        {/* Newsletter Inline Widget */}
+        <div style={{ maxWidth: "800px", margin: "4rem auto 0", width: "100%", padding: "0 1rem" }}>
+          <InlineSubscribe source="inline_homepage" />
+        </div>
 
         {/* Feature Grid */}
         <div className={styles.featureGrid}>

@@ -1,5 +1,6 @@
 import styles from './Footer.module.css';
 import Link from 'next/link';
+import { FooterSubscribe } from './NewsletterWidget';
 
 export default function Footer() {
     return (
@@ -10,6 +11,9 @@ export default function Footer() {
                     <p>
                         The regulated-first guide to the stablecoin ecosystem. We prioritize transparency and safety.
                     </p>
+                    <div style={{ marginTop: '1rem' }}>
+                        <FooterSubscribe />
+                    </div>
                 </div>
 
                 <div className={styles.column}>
