@@ -12,10 +12,20 @@ export async function POST(request: Request) {
         const PUB_ID = process.env.BEEHIIV_PUBLICATION_ID;
 
         if (!API_KEY || !PUB_ID) {
-            // Keys not configured — log server-side but return a graceful success to UX
             console.error('[subscribe] Missing Beehiiv credentials — returning mock success');
             return NextResponse.json({ success: true, message: 'Subscribed successfully' }, { status: 200 });
         }
+
+        const payload = {
+            email,
+            reactivate_existing: true,
+            send_welcome_email: true,
+            utm_source: 'stablecoinatlas.app',
+            utm_medium: 'website',
+            utm_campaign: source || 'website',
+        };
+
+        console.log('[subscribe] Sending to Beehiiv:', { email, source, PUB_ID: PUB_ID.slice(0, 8) + '…' });
 
         const beehiivRes = await fetch(`https://api.beehiiv.com/v2/publications/${PUB_ID}/subscriptions`, {
             method: 'POST',
@@ -23,29 +33,37 @@ export async function POST(request: Request) {
                 'Authorization': `Bearer ${API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                email,
-                reactivate_existing: false,
-                send_welcome_email: false,
-                utm_source: 'stablecoinatlas.app',
-                utm_medium: 'website',
-                utm_campaign: source || 'unknown'
-            }),
+            body: JSON.stringify(payload),
         });
 
+        const responseText = await beehiivRes.text();
+        console.log('[subscribe] Beehiiv response:', beehiivRes.status, responseText);
+
         if (beehiivRes.status === 201 || beehiivRes.status === 200) {
-            return NextResponse.json({ success: true, message: 'Subscribed successfully' }, { status: beehiivRes.status });
+            return NextResponse.json({ success: true, message: 'Subscribed successfully' });
         }
 
-        if (beehiivRes.status === 400 || beehiivRes.status === 422) {
-            return NextResponse.json({ success: false, message: 'Please enter a valid email address' }, { status: 422 });
+        // Parse error body if possible
+        let beehiivError = responseText;
+        try {
+            const parsed = JSON.parse(responseText);
+            beehiivError = parsed.message || parsed.errors?.join(', ') || responseText;
+        } catch { /* not JSON */ }
+
+        if (beehiivRes.status === 422) {
+            return NextResponse.json({ success: false, message: 'Please check your email address and try again.' }, { status: 422 });
         }
 
-        console.error('Beehiiv API Error:', beehiivRes.status, await beehiivRes.text());
+        if (beehiivRes.status === 401 || beehiivRes.status === 403) {
+            console.error('[subscribe] Beehiiv auth error:', beehiivError);
+            return NextResponse.json({ success: false, message: 'Subscription service unavailable. Try again later.' }, { status: 503 });
+        }
+
+        console.error('[subscribe] Beehiiv unexpected error:', beehiivRes.status, beehiivError);
         return NextResponse.json({ success: false, message: 'Something went wrong. Try again.' }, { status: 500 });
 
     } catch (error) {
-        console.error('Subscription error:', error);
+        console.error('[subscribe] Unexpected error:', error);
         return NextResponse.json({ success: false, message: 'Something went wrong. Try again.' }, { status: 500 });
     }
 }
