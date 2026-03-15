@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 
 import { CSPostHogProvider } from "./providers";
 import { StickySubscribeBar } from "@/components/NewsletterWidget";
+import SuspendedPostHogPageView from "./PostHogPageView";
 
 export default function RootLayout({
   children,
@@ -49,6 +50,7 @@ export default function RootLayout({
           />
           <Navbar />
           <div className="flex-1">
+            <SuspendedPostHogPageView />
             {children}
           </div>
           <Footer />
