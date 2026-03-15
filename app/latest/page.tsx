@@ -19,10 +19,6 @@ export default function LatestPage() {
     const [sortOrder, setSortOrder] = useState('newest');
     const [filterType, setFilterType] = useState('all'); // 'all' | 'regulations' | 'companies'
 
-    // Placeholder for submission logic - to be connected to Supabase later
-    const handleSubmitNews = () => {
-        alert("News submission flow coming soon! This will open a form to submit stories.");
-    };
 
     useEffect(() => {
         async function fetchNews() {
@@ -112,9 +108,14 @@ export default function LatestPage() {
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
                 </select>
-                <button className={styles.submitBtn} onClick={handleSubmitNews}>
+                <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSd4mBJLZH5FjHSwUDps84NTq5pDCOApd-9N1jWx1Gmb7q_jEg/viewform?usp=publish-editor"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.submitBtn}
+                >
                     Submit News
-                </button>
+                </a>
             </div>
 
             {loading ? (
