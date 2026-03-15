@@ -456,7 +456,7 @@ export default function LearningPage() {
                         <p>Share it with the community. Our editorial team reviews all submissions within 5 business days.</p>
                     </div>
                     <a
-                        href="https://forms.google.com"
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSd4mBJLZH5FjHSwUDps84NTq5pDCOApd-9N1jWx1Gmb7q_jEg/viewform?usp=publish-editor"
                         target="_blank"
                         rel="noopener noreferrer"
                         className={styles.submissionCtaBtn}

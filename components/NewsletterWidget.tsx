@@ -505,9 +505,32 @@ function useSubscribeForm(source: string, onSuccess?: (email: string) => void) {
 }
 
 // ─── Success view ──────────────────────────────────────────────────────────────
-function SuccessView({ email }: { email: string }) {
+function SuccessView({ email, onClose }: { email: string; onClose?: () => void }) {
   return (
-    <div className="sa-success">
+    <div className="sa-success" style={{ position: 'relative' }}>
+      {onClose && (
+        <button
+          style={{
+            position: 'absolute',
+            top: '-10px',
+            right: '-10px',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(99,179,255,0.15)',
+            borderRadius: '8px',
+            color: '#94A3B8',
+            cursor: 'pointer',
+            fontSize: '16px',
+            width: '32px', height: '32px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'background 0.2s, color 0.2s',
+            zIndex: 2,
+          }}
+          onClick={onClose}
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      )}
       <div className="sa-success-icon">✓</div>
       <div className="sa-success-title">You're in.</div>
       <div className="sa-success-desc">
@@ -523,14 +546,16 @@ function SuccessView({ email }: { email: string }) {
 // ─── 1. Inline section widget ─────────────────────────────────────────────────
 export function InlineSubscribe({ source = 'inline_homepage' }: { source?: string }) {
   const [done, setDone] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [subscribedEmail, setSubscribedEmail] = useState("");
+  const [initialCheckComplete, setInitialCheckComplete] = useState(false);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('atlas_subscribed_email');
     if (savedEmail) {
-      setSubscribedEmail(savedEmail);
-      setDone(true);
+      setDismissed(true);
     }
+    setInitialCheckComplete(true);
   }, []);
 
   const { email, setEmail, loading, error, handleSubmit } = useSubscribeForm(source, (e) => {
@@ -538,6 +563,8 @@ export function InlineSubscribe({ source = 'inline_homepage' }: { source?: strin
     setSubscribedEmail(e);
     setDone(true);
   });
+
+  if (!initialCheckComplete || dismissed) return null;
 
   return (
     <div className="sa-widget">
@@ -594,7 +621,7 @@ export function InlineSubscribe({ source = 'inline_homepage' }: { source?: strin
             </div>
           </>
         ) : (
-          <SuccessView email={subscribedEmail} />
+          <SuccessView email={subscribedEmail} onClose={() => setDismissed(true)} />
         )}
       </div>
     </div>
@@ -785,7 +812,7 @@ export function SubscribeModal({ onClose, isOpen = false, source = 'modal_nav' }
               </div>
             </>
           ) : (
-            <SuccessView email={subscribedEmail} />
+            <SuccessView email={subscribedEmail} onClose={() => setDone(true)} />
           )}
         </div>
       </div>

@@ -37,8 +37,8 @@ const ROLE_FAMILY_COLORS: Record<string, string> = {
     Other: '#6b7280',
 };
 
-// Google Form placeholder — team should replace with actual form URL
-const JOB_SUBMISSION_FORM_URL = 'https://forms.google.com';
+// Google Form URL
+const JOB_SUBMISSION_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScrtZ6YI6uSOauaNmep0DRxAr9mnIa0J6xB5eAS9FFzUTkASQ/viewform?usp=dialog';
 
 export default function CareersPage() {
     const [jobs, setJobs] = useState<Job[]>([]);
