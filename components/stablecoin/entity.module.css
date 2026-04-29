@@ -1,0 +1,342 @@
+.pageContainer {
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.zoneGrid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+    .zoneGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.card {
+    background: var(--glass-surface, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+    border-radius: 1rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Zone 1 - Identity Header */
+.identityHeader {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.coinIdentity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.ticker {
+    font-size: 1.5rem;
+    color: var(--text-secondary, #9ca3af);
+    font-weight: 500;
+}
+
+.metaRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.summary {
+    max-width: 48rem;
+    margin: 0 auto 1.5rem;
+    color: var(--text-secondary, #9ca3af);
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.badgeContainer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.trustBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.lastVerified {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #9ca3af);
+}
+
+/* Shared Panel Styles */
+.dataRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dataRow:last-child {
+    border-bottom: none;
+}
+
+.dataLabel {
+    color: var(--text-secondary, #9ca3af);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dataValue {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: right;
+    max-width: 60%;
+}
+
+.link {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.emptyState {
+    color: var(--text-secondary, #9ca3af);
+    font-style: italic;
+}
+
+/* Zone 3 - Regulatory Alignment */
+.jurisdictionGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .jurisdictionGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.regCard {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.regCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.jurisdictionName {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.statusBadge {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+}
+
+.statusAligned {
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.statusUnknown {
+    background: rgba(156, 163, 175, 0.1);
+    color: #9ca3af;
+    border: 1px solid rgba(156, 163, 175, 0.2);
+}
+
+.regBasis {
+    font-size: 0.875rem;
+    color: var(--text-secondary, #9ca3af);
+    margin-bottom: 0.5rem;
+}
+
+.regFramework {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #9ca3af);
+    opacity: 0.8;
+}
+
+/* Zone 4 - Chain Support */
+.chainTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.chainTable th {
+    text-align: left;
+    color: var(--text-secondary, #9ca3af);
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chainTable td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chainTable tr:last-child td {
+    border-bottom: none;
+}
+
+.contractAddress {
+    font-family: monospace;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #60a5fa;
+}
+
+.copyButton {
+    background: none;
+    border: none;
+    color: var(--text-secondary, #9ca3af);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.copyButton:hover {
+    color: #fff;
+}
+
+.cautionNote {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+}
+
+/* Zone 5 - Market Data */
+.marketGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+.marketKpi {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.kpiLabel {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #9ca3af);
+    margin-bottom: 0.25rem;
+}
+
+.kpiValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.positive { color: #4ade80; }
+.negative { color: #f87171; }
+
+.disclaimerText {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #9ca3af);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+/* Depeg */
+.depegList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.depegItem {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.depegDate { font-weight: 600; color: #fca5a5; }
+.depegMag { color: #f87171; font-weight: 700; }
