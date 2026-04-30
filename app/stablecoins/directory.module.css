@@ -3,6 +3,7 @@
     max-width: 72rem;
     margin: 0 auto;
     padding: 2rem 1rem;
+    padding-top: calc(var(--nav-height, 4rem) + 2rem);
     position: relative;
     z-index: 10;
 }
