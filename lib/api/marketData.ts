@@ -32,13 +32,18 @@ export async function getMarketData(stablecoinId: string): Promise<MarketData> {
     try {
         // Fetch CoinGecko Data
         const cgRes = await fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${geckoId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true`,
+            `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${geckoId}`,
             fetchOptions
         );
         const cgData = await cgRes.json();
         
-        const market_cap = cgData[geckoId]?.usd_market_cap || null;
-        const volume_24h = cgData[geckoId]?.usd_24h_vol || null;
+        let market_cap = null;
+        let volume_24h = null;
+
+        if (Array.isArray(cgData) && cgData.length > 0) {
+            market_cap = cgData[0].market_cap || null;
+            volume_24h = cgData[0].total_volume || null;
+        }
 
         // Fetch DeFiLlama Data
         const dlRes = await fetch(`https://stablecoins.llama.fi/stablecoins`, fetchOptions);

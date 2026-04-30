@@ -19,6 +19,7 @@ export default function Footer() {
                 <div className={styles.column}>
                     <h4>Platform</h4>
                     <ul className={styles.links}>
+                        <li><Link href="/stablecoins">Stablecoin Directory</Link></li>
                         <li><Link href="/learn">Learn Basics</Link></li>
                         <li><Link href="/latest">Latest Updates</Link></li>
                         <li><Link href="/playbooks">Playbooks</Link></li>

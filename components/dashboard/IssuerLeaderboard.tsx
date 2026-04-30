@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './dashboard.module.css';
 
 interface LeaderboardItem {
@@ -16,7 +18,7 @@ interface LeaderboardItem {
 
 export function IssuerLeaderboard({ data }: { data: LeaderboardItem[] }) {
     const [sortConfig, setSortConfig] = React.useState<{ key: keyof LeaderboardItem; direction: 'asc' | 'desc' } | null>(null);
-    const [expandedRow, setExpandedRow] = React.useState<string | null>(null);
+    const router = useRouter();
 
     const REGULATED_COINS = ['USDC', 'EURC', 'XSGD'];
 
@@ -103,15 +105,18 @@ export function IssuerLeaderboard({ data }: { data: LeaderboardItem[] }) {
                             <React.Fragment key={coin.id}>
                                 <tr
                                     className={styles.rowClickable}
-                                    onClick={() => setExpandedRow(expandedRow === coin.id ? null : coin.id)}
+                                    onClick={() => router.push(`/stablecoins/${coin.id}`)}
+                                    title={`View ${coin.name} entity page`}
                                 >
                                     <td>{index + 1}</td>
                                     <td style={{ fontWeight: 500 }}>
-                                        {coin.symbol}
-                                        <span style={{ color: 'var(--text-secondary)', marginLeft: '0.5rem', fontWeight: 400 }}>{coin.name}</span>
-                                        {REGULATED_COINS.includes(coin.symbol) && (
-                                            <span className={styles.regulatedBadge}>Regulated</span>
-                                        )}
+                                        <Link href={`/stablecoins/${coin.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            {coin.symbol}
+                                            <span style={{ color: 'var(--text-secondary)', marginLeft: '0.5rem', fontWeight: 400 }}>{coin.name}</span>
+                                            {REGULATED_COINS.includes(coin.symbol) && (
+                                                <span className={styles.regulatedBadge}>Regulated</span>
+                                            )}
+                                        </Link>
                                     </td>
                                     <td>{getPegIcon(coin.pegType)}</td>
                                     <td>{formatCurrency(coin.marketCap)}</td>
@@ -120,30 +125,15 @@ export function IssuerLeaderboard({ data }: { data: LeaderboardItem[] }) {
                                     <td>{formatPercent(coin.change30d)}</td>
                                     <td>{coin.chains}</td>
                                 </tr>
-                                {expandedRow === coin.id && (
-                                    <tr className={styles.accordionRow}>
-                                        <td colSpan={8}>
-                                            <div className={styles.accordionContent}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <div>
-                                                        <strong>Issuer/Deployments:</strong> Available across {coin.chains} distinct blockchain networks.
-                                                    </div>
-                                                    <div>
-                                                        <strong>Data Source:</strong> <a href={`https://defillama.com/stablecoin/${coin.id}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none' }}>View on DeFiLlama &rarr;</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
                             </React.Fragment>
                         ))}
                     </tbody>
                 </table>
             </div>
             <div style={{ marginTop: '1rem', fontSize: '0.875rem' }}>
-                {/* Placeholder for future expansion */}
-                <span style={{ color: 'var(--primary)', cursor: 'pointer' }}>View all stablecoins &rarr;</span>
+                <Link href="/stablecoins" style={{ color: 'var(--primary)', textDecoration: 'none' }}>
+                    View full directory &rarr;
+                </Link>
             </div>
         </div>
     );

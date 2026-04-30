@@ -54,12 +54,14 @@ export default function Home() {
 
         {/* Feature Grid */}
         <div className={styles.featureGrid}>
-          {[
-            { title: "Learn", desc: "Master from the basics to advanced mechanics of stablecoins.", href: "/learning" },
-            { title: "Latest", desc: "Get the latest pulse, news, and ecosystem developments.", href: "/latest" },
-            { title: "Careers", desc: "Find your next role in the growing stablecoin industry.", href: "/careers" }
-          ].map((feature, i) => (
-            <Link href={feature.href} key={i} className={`glass-panel ${styles.featureCard}`}>
+            {[
+              { title: "Stablecoins", desc: "Browse regulated stablecoins, reserve attestations and regulatory status.", href: "/stablecoins", icon: "🪙", highlight: true },
+              { title: "Learn", desc: "Master from the basics to advanced mechanics of stablecoins.", href: "/learning", icon: "📖", highlight: false },
+              { title: "Latest", desc: "Get the latest pulse, news, and ecosystem developments.", href: "/latest", icon: "📰", highlight: false },
+              { title: "Careers", desc: "Find your next role in the growing stablecoin industry.", href: "/careers", icon: "💼", highlight: false }
+            ].map((feature, i) => (
+            <Link href={feature.href} key={i} className={`glass-panel ${styles.featureCard} ${feature.highlight ? styles.featureCardHighlight : ''}`}>
+              <span className={styles.featureIcon}>{feature.icon}</span>
               <h3 className={styles.featureTitle}>
                 {feature.title} <span className={styles.arrow}>&rarr;</span>
               </h3>

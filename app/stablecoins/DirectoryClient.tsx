@@ -12,20 +12,13 @@ interface Props {
     corridors: Corridor[];
 }
 
-const COINGECKO_ID_MAP: Record<string, string> = {
-    USDC: 'usd-coin',
-    USDT: 'tether',
-    PYUSD: 'paypal-usd',
-    XSGD: 'xsgd',
-    EURC: 'euro-coin',
-    FDUSD: 'first-digital-usd',
-    EURS: 'stasis-eurs',
-    GBPT: 'tether-gbp',
-    DAI: 'dai',
-    USDP: 'paxos-standard',
+// Map ticker to local image
+const getLocalLogoUrl = (ticker: string) => {
+    return `/images/coins/${ticker.toLowerCase()}.png`;
 };
 
 const formatBadge = (badge: string) => {
+    if (badge === 'ATTESTATION_OR_AUDIT_LINKED') return 'Attestation Linked';
     return badge.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
 };
 
@@ -34,6 +27,7 @@ export default function DirectoryClient({ stablecoins, companies, corridors }: P
     const [searchQuery, setSearchQuery] = useState('');
     const [pegFilter, setPegFilter] = useState<string>('All');
     const [badgeFilter, setBadgeFilter] = useState<string>('All');
+    const [corridorFilter, setCorridorFilter] = useState<string>('All');
 
     const filteredCoins = useMemo(() => {
         let result = stablecoins;
@@ -51,6 +45,30 @@ export default function DirectoryClient({ stablecoins, companies, corridors }: P
             result = result.filter(c => c.badges.includes(badgeFilter));
         }
 
+        if (corridorFilter !== 'All') {
+            const corridor = corridors.find(c => c.id === corridorFilter);
+            if (corridor) {
+                const mapJurisdictionToCurrency = (jur: string) => {
+                    switch (jur.toLowerCase()) {
+                        case 'sg': return 'SGD';
+                        case 'uk': return 'GBP';
+                        case 'eu': return 'EUR';
+                        case 'us': return 'USD';
+                        default: return null;
+                    }
+                };
+                
+                const sourceCurrency = mapJurisdictionToCurrency(corridor.source_jurisdiction_id);
+                const targetCurrency = mapJurisdictionToCurrency(corridor.target_jurisdiction_id);
+                
+                result = result.filter(c => 
+                    c.peg_currency === sourceCurrency || 
+                    c.peg_currency === targetCurrency ||
+                    (c.regulatory_alignments && c.regulatory_alignments.some(ra => ra.jurisdiction_id === corridor.source_jurisdiction_id || ra.jurisdiction_id === corridor.target_jurisdiction_id))
+                );
+            }
+        }
+
         // Sort by badge completeness (number of badges) descending, then alphabetical (since we don't have live market cap here for sorting easily, we sort by badge count)
         result.sort((a, b) => {
             if (b.badges.length !== a.badges.length) {
@@ -60,12 +78,10 @@ export default function DirectoryClient({ stablecoins, companies, corridors }: P
         });
 
         return result;
-    }, [stablecoins, searchQuery, pegFilter, badgeFilter]);
+    }, [stablecoins, searchQuery, pegFilter, badgeFilter, corridorFilter, corridors]);
 
     const getLogoUrl = (ticker: string) => {
-        const geckoId = COINGECKO_ID_MAP[ticker];
-        if (!geckoId) return `https://assets.coingecko.com/coins/images/1/standard/bitcoin.png`;
-        return `https://assets.coingecko.com/coins/images/${geckoId === 'usd-coin' ? '6319' : geckoId === 'tether' ? '325' : geckoId === 'dai' ? '9956' : geckoId === 'stasis-eurs' ? '5164' : geckoId === 'xsgd' ? '12829' : geckoId === 'euro-coin' ? '26081' : geckoId === 'paypal-usd' ? '31160' : geckoId === 'first-digital-usd' ? '31043' : geckoId === 'paxos-standard' ? '6013' : '1'}/standard/${geckoId}.png`;
+        return getLocalLogoUrl(ticker);
     };
 
     return (
@@ -97,6 +113,13 @@ export default function DirectoryClient({ stablecoins, companies, corridors }: P
                     <option value="REGULATED_FRAMEWORK_ALIGNED">Regulated Framework</option>
                     <option value="REDEMPTION_POLICY_DISCLOSED">Redemption Disclosed</option>
                     <option value="ATTESTATION_OR_AUDIT_LINKED">Attestation Linked</option>
+                </select>
+
+                <select className={styles.select} value={corridorFilter} onChange={(e) => setCorridorFilter(e.target.value)}>
+                    <option value="All">All Corridors</option>
+                    {corridors && corridors.map(c => (
+                        <option key={c.id} value={c.id}>{c.description}</option>
+                    ))}
                 </select>
 
                 <div className={styles.viewToggle}>

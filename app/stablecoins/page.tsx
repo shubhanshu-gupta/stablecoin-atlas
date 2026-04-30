@@ -4,11 +4,11 @@ import DirectoryClient from './DirectoryClient';
 import { STABLECOINS, COMPANIES, CORRIDORS } from '@/lib/data';
 
 export const metadata: Metadata = {
-    title: 'Stablecoin Directory | Stablecoin Atlas',
-    description: 'Explore, compare, and filter regulated stablecoins including USDC, USDT, PYUSD, EURC, XSGD, and more. Understand their reserve backing, attestation status, and regulatory alignment.',
+    title: 'Stablecoin Directory: Regulated Stablecoins, Reserve Attestations & Status | Stablecoin Atlas',
+    description: 'Browse all regulated stablecoins. Compare reserve attestations, regulatory status, chain support and depeg history. Curated by Stablecoin Atlas.',
     openGraph: {
-        title: 'Stablecoin Directory | Stablecoin Atlas',
-        description: 'Explore, compare, and filter regulated stablecoins including USDC, USDT, PYUSD, EURC, XSGD, and more.',
+        title: 'Stablecoin Directory: Regulated Stablecoins, Reserve Attestations & Status | Stablecoin Atlas',
+        description: 'Browse all regulated stablecoins. Compare reserve attestations, regulatory status, chain support and depeg history. Curated by Stablecoin Atlas.',
         type: 'website',
     }
 };

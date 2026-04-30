@@ -259,7 +259,7 @@ export const STABLECOINS: Stablecoin[] = [
         peg_currency: 'USD',
         type: 'CDP',
         summary: 'A decentralized, crypto-backed stablecoin managed by Sky (formerly MakerDAO).',
-        badges: ['TRANSPARENT'],
+        badges: ['REDEMPTION_POLICY_DISCLOSED', 'ATTESTATION_OR_AUDIT_LINKED'],
         backing_description: 'Over-collateralized by a diverse portfolio of crypto assets and real-world assets.',
         reserve_composition: [],
         attestation_frequency: 'not_disclosed',

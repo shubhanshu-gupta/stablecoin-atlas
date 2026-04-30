@@ -127,7 +127,13 @@
 
 @media (min-width: 768px) {
   .featureGrid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .featureGrid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -165,4 +171,21 @@
 .featureDesc {
   color: var(--text-secondary);
   line-height: 1.5;
+}
+
+.featureCardHighlight {
+  border-color: var(--primary) !important;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.08) 0%, rgba(14, 165, 233, 0.04) 100%) !important;
+}
+
+.featureCardHighlight:hover {
+  border-color: var(--primary) !important;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.15) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
+  transform: translateY(-6px);
+}
+
+.featureIcon {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  display: block;
 }

@@ -4,14 +4,14 @@ import { MarketData } from '@/lib/api/marketData';
 
 export default function MarketContext({ marketData }: { marketData: MarketData }) {
     const formatCurrency = (val: number | null) => {
-        if (val === null) return 'N/A';
+        if (val === null) return <span className={styles.emptyState}>Data temporarily unavailable</span>;
         if (val >= 1e9) return `$${(val / 1e9).toFixed(2)}B`;
         if (val >= 1e6) return `$${(val / 1e6).toFixed(2)}M`;
         return `$${val.toLocaleString()}`;
     };
 
     const formatPct = (val: number | null) => {
-        if (val === null) return 'N/A';
+        if (val === null) return <span className={styles.emptyState}>Data temporarily unavailable</span>;
         return `${val > 0 ? '+' : ''}${val.toFixed(2)}%`;
     };
 
