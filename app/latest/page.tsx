@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import styles from './page.module.css';
 
 interface NewsItem {
@@ -11,6 +12,20 @@ interface NewsItem {
     source: string;
     isoDate: string;
 }
+
+// Static list for cross-linking — keeps SEO benefit even without NLP on RSS titles
+const STABLECOIN_LINKS = [
+    { ticker: 'USDC',  id: 'usdc'  },
+    { ticker: 'USDT',  id: 'usdt'  },
+    { ticker: 'PYUSD', id: 'pyusd' },
+    { ticker: 'XSGD',  id: 'xsgd'  },
+    { ticker: 'EURC',  id: 'eurc'  },
+    { ticker: 'FDUSD', id: 'fdusd' },
+    { ticker: 'EURS',  id: 'eurs'  },
+    { ticker: 'GBPT',  id: 'gbpt'  },
+    { ticker: 'DAI',   id: 'dai'   },
+    { ticker: 'USDP',  id: 'usdp'  },
+];
 
 export default function LatestPage() {
     const [news, setNews] = useState<NewsItem[]>([]);
@@ -82,6 +97,21 @@ export default function LatestPage() {
                     Stay updated with the most important news, regulatory updates, and ecosystem changes in the stablecoin world.
                 </p>
             </header>
+
+            {/* P0: Internal links to stablecoin entity pages */}
+            <nav aria-label="Stablecoin quick links" className={styles.stablecoinStrip}>
+                <span className={styles.stripLabel}>Stablecoins:</span>
+                {STABLECOIN_LINKS.map(({ ticker, id }) => (
+                    <Link
+                        key={id}
+                        href={`/stablecoins/${id}`}
+                        className={styles.stripChip}
+                        aria-label={`View ${ticker} entity page`}
+                    >
+                        {ticker}
+                    </Link>
+                ))}
+            </nav>
 
             <div className={styles.controls}>
                 <input

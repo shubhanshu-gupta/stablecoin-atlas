@@ -55,6 +55,12 @@ export const STABLECOINS: Stablecoin[] = [
             { chain_name: 'Ethereum', contract_address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', explorer_url: 'https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
             { chain_name: 'Solana', contract_address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', explorer_url: 'https://solscan.io/token/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' }
         ],
+        notable_events: [
+            { date: '2023-09-06', action_type: 'Policy Change', summary: 'Circle announces USDC native issuance on Base mainnet.', evidence_url: 'https://www.circle.com/blog/usdc-now-available-natively-on-base' },
+            { date: '2023-09-21', action_type: 'License', summary: 'Circle receives Major Payment Institution (MPI) licence from MAS.', evidence_url: 'https://www.mas.gov.sg/regulation/payments/major-payment-institutions' },
+            { date: '2024-03-21', action_type: 'License', summary: 'Circle Mint France receives EMI authorisation under MiCA, enabling USDC as a regulated EMT in the EU.', evidence_url: 'https://www.circle.com/blog/circle-receives-emi-license-in-france' },
+            { date: '2024-09-05', action_type: 'Chain Expansion', summary: "USDC natively launched on Arbitrum via Circle's CCTP.", evidence_url: 'https://www.circle.com/blog/usdc-now-available-natively-on-arbitrum' },
+        ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
     },
@@ -86,6 +92,11 @@ export const STABLECOINS: Stablecoin[] = [
             { chain_name: 'Ethereum', contract_address: '0xdac17f958d2ee523a2206206994597c13d831ec7', explorer_url: 'https://etherscan.io/token/0xdac17f958d2ee523a2206206994597c13d831ec7' },
             { chain_name: 'Tron', contract_address: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', explorer_url: 'https://tronscan.org/#/token20/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t' }
         ],
+        notable_events: [
+            { date: '2021-10-15', action_type: 'Chain Expansion', summary: 'Tether launches USDT on Avalanche C-Chain.', evidence_url: 'https://tether.to/en/tether-usd-usdt-now-available-on-avalanche/' },
+            { date: '2023-06-10', action_type: 'Enforcement', summary: "CFTC and DOJ investigations into Tether's reserve practices cited in Binance settlement documents.", evidence_url: 'https://www.cftc.gov/PressRoom/PressReleases/8774-23' },
+            { date: '2024-11-07', action_type: 'Attestation', summary: 'Tether publishes Q3 2024 attestation report showing $125B in reserves.', evidence_url: 'https://tether.to/en/transparency/' },
+        ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
     },
@@ -113,6 +124,10 @@ export const STABLECOINS: Stablecoin[] = [
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0x6c3ea9036406852006290770bedfcaba0e23a0e8', explorer_url: 'https://etherscan.io/token/0x6c3ea9036406852006290770bedfcaba0e23a0e8' },
             { chain_name: 'Solana', contract_address: '2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZofHmWsZVA2', explorer_url: 'https://solscan.io/token/2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZofHmWsZVA2' }
+        ],
+        notable_events: [
+            { date: '2023-08-07', action_type: 'Other', summary: 'PayPal announces PYUSD launch, the first stablecoin by a major US payments company.', evidence_url: 'https://newsroom.paypal-corp.com/2023-08-07-PayPal-Launches-U-S-Dollar-Stablecoin' },
+            { date: '2024-05-29', action_type: 'Chain Expansion', summary: 'PYUSD launches natively on Solana, expanding beyond Ethereum.', evidence_url: 'https://newsroom.paypal-corp.com/2024-05-29-PayPal-USD-Launches-on-Solana' },
         ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
@@ -144,6 +159,11 @@ export const STABLECOINS: Stablecoin[] = [
             { chain_name: 'Ethereum', contract_address: '0x70e8de73ce538da2beed35d14187f6959a8eca96', explorer_url: 'https://etherscan.io/token/0x70e8de73ce538da2beed35d14187f6959a8eca96' },
             { chain_name: 'Polygon', contract_address: '0xdc3326e71d45186f113a2f448984ca0e8d201995', explorer_url: 'https://polygonscan.com/token/0xdc3326e71d45186f113a2f448984ca0e8d201995' }
         ],
+        notable_events: [
+            { date: '2020-09-21', action_type: 'Other', summary: 'StraitsX launches XSGD, the first regulated SGD-pegged stablecoin.', evidence_url: 'https://straitsx.com' },
+            { date: '2023-06-01', action_type: 'License', summary: 'StraitsX (Xfers) granted Major Payment Institution licence by MAS under the Payment Services Act.', evidence_url: 'https://www.mas.gov.sg/regulation/payments/major-payment-institutions' },
+            { date: '2024-02-15', action_type: 'Chain Expansion', summary: 'XSGD expands to Polygon network, enabling lower-cost cross-border transfers.', evidence_url: 'https://straitsx.com' },
+        ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
     },
@@ -173,6 +193,10 @@ export const STABLECOINS: Stablecoin[] = [
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c', explorer_url: 'https://etherscan.io/token/0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c' }
         ],
+        notable_events: [
+            { date: '2023-07-20', action_type: 'Other', summary: 'Circle launches EURC (formerly EUROC), a fully reserved euro stablecoin.', evidence_url: 'https://www.circle.com/blog/euro-coin-becomes-eurc' },
+            { date: '2024-07-01', action_type: 'License', summary: 'EURC becomes MiCA-compliant as Circle Mint France authorised as EMI by ACPR.', evidence_url: 'https://www.circle.com/blog/circle-receives-emi-license-in-france' },
+        ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
     },
@@ -197,6 +221,10 @@ export const STABLECOINS: Stablecoin[] = [
         regulatory_alignments: [],
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0xc5f0f7b66764f6ec8c8dff7ba683102295e16409', explorer_url: 'https://etherscan.io/token/0xc5f0f7b66764f6ec8c8dff7ba683102295e16409' }
+        ],
+        notable_events: [
+            { date: '2022-06-01', action_type: 'Other', summary: 'First Digital launches FDUSD targeting institutional and exchange use in Asia.', evidence_url: 'https://firstdigitallabs.com' },
+            { date: '2023-11-01', action_type: 'Attestation', summary: 'FDUSD publishes first independent attestation report from Prescient Assurance.', evidence_url: 'https://firstdigitallabs.com' },
         ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
@@ -223,6 +251,10 @@ export const STABLECOINS: Stablecoin[] = [
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0xdb25f211ab05b1c97d595516f45794528a807ad8', explorer_url: 'https://etherscan.io/token/0xdb25f211ab05b1c97d595516f45794528a807ad8' }
         ],
+        notable_events: [
+            { date: '2018-04-01', action_type: 'Other', summary: 'STASIS launches EURS, one of the first euro-pegged stablecoins on Ethereum.', evidence_url: 'https://stasis.net' },
+            { date: '2023-01-01', action_type: 'Attestation', summary: 'STASIS publishes attestation by BDO Malta confirming 1:1 euro backing.', evidence_url: 'https://stasis.net/transparency' },
+        ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
     },
@@ -247,6 +279,9 @@ export const STABLECOINS: Stablecoin[] = [
         regulatory_alignments: [],
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0x0000000000000000000000000000000000000000', explorer_url: 'https://etherscan.io/' } // Mock address
+        ],
+        notable_events: [
+            { date: '2021-06-22', action_type: 'Other', summary: 'Tether launches GBPT, a British Pound-pegged stablecoin on Ethereum.', evidence_url: 'https://tether.to/en/tether-launches-gbpt-a-new-pound-sterling-denominated-stablecoin/' },
         ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
@@ -275,6 +310,11 @@ export const STABLECOINS: Stablecoin[] = [
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0x6b175474e89094c44da98b954eedeac495271d0f', explorer_url: 'https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f' }
         ],
+        notable_events: [
+            { date: '2017-12-17', action_type: 'Other', summary: 'MakerDAO launches DAI on Ethereum mainnet as the first decentralized stablecoin.', evidence_url: 'https://makerdao.com' },
+            { date: '2022-11-18', action_type: 'Policy Change', summary: 'MakerDAO community votes to begin DAI rebranding effort to USDS under new Sky protocol.', evidence_url: 'https://sky.money' },
+            { date: '2024-08-27', action_type: 'Policy Change', summary: 'MakerDAO rebrands to Sky; DAI officially rebranded to USDS for new mints.', evidence_url: 'https://sky.money' },
+        ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'
     },
@@ -301,6 +341,11 @@ export const STABLECOINS: Stablecoin[] = [
         ],
         supported_chains: [
             { chain_name: 'Ethereum', contract_address: '0x8e870d67f660d95d5be530380d0ec0bd388289e1', explorer_url: 'https://etherscan.io/token/0x8e870d67f660d95d5be530380d0ec0bd388289e1' }
+        ],
+        notable_events: [
+            { date: '2018-09-26', action_type: 'License', summary: 'Paxos Standard Token (PAX, later USDP) launches as one of the first NYDFS-regulated stablecoins.', evidence_url: 'https://paxos.com' },
+            { date: '2021-09-28', action_type: 'Policy Change', summary: 'Paxos renames PAX to Pax Dollar (USDP) to differentiate from the Paxos brand.', evidence_url: 'https://paxos.com/2021/09/28/pax-is-now-pax-dollar-usdp/' },
+            { date: '2024-10-01', action_type: 'Attestation', summary: 'Paxos publishes monthly attestation confirming full 1:1 USD backing for USDP.', evidence_url: 'https://paxos.com/usdp-transparency/' },
         ],
         last_verified_at: '2026-04-20',
         created_at: '2026-04-01'

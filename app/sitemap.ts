@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { STABLECOINS } from '@/lib/data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://stablecoinatlas.com';
+    const baseUrl = 'https://stablecoinatlas.app';
 
     return [
         {
@@ -58,5 +59,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.5,
         },
+        // Stablecoin directory
+        {
+            url: `${baseUrl}/stablecoins`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        // Stablecoin entity pages
+        ...STABLECOINS.map((coin) => ({
+            url: `${baseUrl}/stablecoins/${coin.id}`,
+            lastModified: new Date(coin.last_verified_at),
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+        })),
     ];
 }

@@ -27,6 +27,13 @@ export type DepegEvent = {
     notes: string;
 };
 
+export type NotableEvent = {
+    date: string; // YYYY-MM-DD
+    action_type: 'License' | 'Chain Expansion' | 'Attestation' | 'Enforcement' | 'Policy Change' | 'Other';
+    summary: string; // One-line description
+    evidence_url?: string;
+};
+
 export type RegulatoryAlignment = {
     jurisdiction_id: string;
     framework: string;
@@ -76,6 +83,9 @@ export type Stablecoin = {
     // Zone 4
     supported_chains: SupportedChain[];
     
+    // Zone 6
+    notable_events: NotableEvent[];
+
     last_verified_at: string;
     created_at: string;
 };

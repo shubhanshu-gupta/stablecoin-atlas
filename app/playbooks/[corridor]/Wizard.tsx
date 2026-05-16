@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import styles from './wizard.module.css';
 
 interface WizardProps {
@@ -57,6 +58,15 @@ export default function Wizard({ corridor }: WizardProps) {
                                 <option value="XSGD">XSGD (StraitsX)</option>
                                 <option value="PYUSD">PYUSD (Paxos)</option>
                             </select>
+                            <Link
+                                href={`/stablecoins/${formData.asset.toLowerCase()}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ display: 'inline-block', marginTop: '0.5rem', fontSize: '0.8rem', color: '#60a5fa', textDecoration: 'none' }}
+                                aria-label={`View ${formData.asset} profile on Stablecoin Atlas`}
+                            >
+                                View {formData.asset} profile on Stablecoin Atlas →
+                            </Link>
                         </div>
                         <div className={styles.warningBox}>
                             ⚠️ Ensure you have a verified account on a regulated exchange in {corridor.sourceName}.
@@ -68,7 +78,10 @@ export default function Wizard({ corridor }: WizardProps) {
                     <div>
                         <h2 className={styles.stepTitle}>2. On-Ramp in {corridor.sourceName}</h2>
                         <p className="mb-4 text-[var(--text-secondary)]">
-                            Convert your Fiat ({corridor.source === 'sg' ? 'SGD' : 'USD'}) to {formData.asset}.
+                            Convert your Fiat ({corridor.source === 'sg' ? 'SGD' : 'USD'}) to{' '}
+                            <Link href={`/stablecoins/${formData.asset.toLowerCase()}`} target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>
+                                {formData.asset}
+                            </Link>.
                         </p>
                         <ul className="list-disc pl-5 space-y-2 text-[var(--text-secondary)]">
                             <li>Log in to your regulated exchange (e.g. Coinbase, StraitsX).</li>
@@ -82,7 +95,11 @@ export default function Wizard({ corridor }: WizardProps) {
                     <div>
                         <h2 className={styles.stepTitle}>3. Transfer on-chain</h2>
                         <p className="mb-4 text-[var(--text-secondary)]">
-                            Send {formData.asset} to your destination wallet or exchange.
+                            Send{' '}
+                            <Link href={`/stablecoins/${formData.asset.toLowerCase()}`} target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa' }}>
+                                {formData.asset}
+                            </Link>{' '}
+                            to your destination wallet or exchange.
                         </p>
                         <div className={styles.warningBox}>
                             ⚠️ Double check the network (Ethereum, Polygon, Solana). Sending to the wrong network causes permanent loss.
