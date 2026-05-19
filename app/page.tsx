@@ -49,7 +49,7 @@ export default function Home() {
 
         {/* Newsletter Inline Widget */}
         <div style={{ maxWidth: "800px", margin: "4rem auto 0", width: "100%", padding: "0 1rem" }}>
-          <InlineSubscribe source="inline_homepage" />
+          <InlineSubscribe />
         </div>
 
         {/* Feature Grid */}
