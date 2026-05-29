@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './entity.module.css';
 import { Stablecoin, Company } from '@/lib/types';
 
@@ -24,19 +25,42 @@ export default function IdentityHeader({ stablecoin, issuer }: Props) {
 
     return (
         <section className={styles.identityHeader}>
-            <div className={styles.coinIdentity}>
-                {finalLogoUrl && (
-                    <Image 
-                        src={finalLogoUrl} 
-                        alt={`${stablecoin.name} logo`} 
-                        width={48} 
-                        height={48} 
-                        className={styles.logo}
-                        unoptimized
-                    />
-                )}
-                <h1 className={styles.title}>{stablecoin.name}</h1>
-                <span className={styles.ticker}>({stablecoin.ticker})</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                <div className={styles.coinIdentity}>
+                    {finalLogoUrl && (
+                        <Image 
+                            src={finalLogoUrl} 
+                            alt={`${stablecoin.name} logo`} 
+                            width={48} 
+                            height={48} 
+                            className={styles.logo}
+                            unoptimized
+                        />
+                    )}
+                    <h1 className={styles.title}>{stablecoin.name}</h1>
+                    <span className={styles.ticker}>({stablecoin.ticker})</span>
+                </div>
+                
+                <Link 
+                    href={`/compare?coins=${stablecoin.id},usdc,usdt`} 
+                    style={{ 
+                        padding: '0.4rem 0.8rem', 
+                        border: '1px solid var(--glass-border)',
+                        background: 'transparent',
+                        color: 'var(--foreground)', 
+                        borderRadius: 'var(--radius-sm)', 
+                        textDecoration: 'none', 
+                        fontSize: '0.85rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem'
+                    }}
+                >
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Compare
+                </Link>
             </div>
             
             <div className={styles.metaRow}>

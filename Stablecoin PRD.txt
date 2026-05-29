@@ -1,0 +1,123 @@
+Build a “Stablecoin Command Center”: a single portal that converts fragmented stablecoin information into trusted intelligence (latest, companies, regulators), a regulated-first discovery experience, career pathways, and corridor-based playbooks to actually use stablecoins (remit, spend, P2P, cash-out).​
+PRD summary
+Product name
+Stablecoin Atlas (working title).
+One-line value proposition
+A regulated-first, corridor-based stablecoin portal that helps professionals and everyday users learn, track tangible ecosystem moves, find careers, and execute real stablecoin use cases end-to-end.​
+MVP geographies/corridors
+	•	SG → UK / US​
+	•	US → UK​
+	•	UK → EU​
+Users and problems
+Primary user segments
+	•	FinTech/crypto professionals (banks, fintechs, networks, infra providers): want credible updates, competitive intel, and career mobility.
+	•	Remittance-oriented users: want stable-value transfer options and a simple, safe “how-to” by corridor.
+	•	Curious learners: want hands-on guided learning without needing deep crypto knowledge.
+Core user constraints (what we solve)
+	•	Confusing basics: what stablecoins are, how pegs work, why “backed” claims matter.​
+	•	Hard to track “real” progress: which company/regulator did something tangible vs marketing.​
+	•	Not location-specific: most guides don’t say exactly what to do in SG/US/UK/EU contexts.​
+	•	Career ambiguity: unclear roles, skill expectations, and how to upskill.
+Goals, non-goals, principles
+Goals (MVP)
+	•	Deliver a regulated-first portal experience that explains stablecoins, tracks latest developments, and provides tangible company/regulator actions with evidence links.​
+	•	Provide corridor-based “Use stablecoins” playbooks for SG→UK/US, US→UK, UK→EU including on-ramp → transfer → off-ramp steps and safety checks.​
+	•	Launch a careers hub with role maps and job aggregation + alerts.
+Non-goals (MVP)
+	•	Not a trading terminal or “alpha” platform.​
+	•	Not a custodian or wallet that holds user funds.
+	•	Not investment, legal, tax, or financial advice (explicitly disclaimed).​
+Product principles
+	•	Regulated-first by default; “show all” for broader exploration.​
+	•	Evidence over opinion: every “tangible action” has a source link.​
+	•	Corridor-first usability: users start with an intent and location context, not jargon.​
+	•	Safety by design: irreversible transfer warnings, chain/network mismatch prevention patterns, and “test with small amount” guidance.​
+Disclaimer and compliance requirements (hard requirement)
+Site-wide disclaimer (must be prominent)
+	•	“This website and all content is provided for informational and educational purposes only and does not constitute financial, investment, legal, tax, or accounting advice.”​
+	•	“Nothing on this site is an offer, solicitation, or recommendation to buy, sell, or use any cryptoasset or stablecoin.”​
+	•	“Cryptoassets can be high-risk; transfers may be irreversible; and laws vary by jurisdiction. Always do your own research and consult qualified professionals where appropriate.”​
+	•	“Availability and regulatory status may change; users are responsible for compliance with local laws and platform terms.”​
+Placement requirements
+	•	Persistent footer on every page.​
+	•	First-time interstitial acknowledgment before a user can start any “Use cases” playbook.​
+	•	Inline warnings near any step that resembles “recommendation” (e.g., default stablecoin choice, corridor suggested route).​
+Solution scope and key experiences
+Information architecture (top nav)
+	•	Learn
+	•	Latest
+	•	Companies
+	•	Regulators
+	•	Use cases (Playbooks)
+	•	Careers
+	•	Tools (Glossary, Compare, Calculators)
+Core user journeys
+	•	Learn stablecoins (progressive learning)
+	•	“Stablecoins 101” (definitions, types, pegs, risks, reserves, redemption).​
+	•	“Under the hood” modules: mint/burn, reserves and attestation, redemption mechanics, chain selection tradeoffs.​
+	•	What’s latest (signal not noise)
+	•	Curated feed + weekly digest with tagging: stablecoin, company, regulator, jurisdiction, theme.​
+	•	“Tangible tracker”: structured entries for launches, pilots, licenses, enforcement actions, reserve attestations, chain expansions.​
+	•	Company & regulator intelligence
+	•	Entity pages for: Stablecoins, Companies, Regulators, Chains/Networks, Jurisdictions.
+	•	“Credibility signals” panel (regulated framework alignment, redemption policy disclosed, attestations/audits linked).​
+	•	Use stablecoins (corridor-based playbooks)
+	•	Entry: select corridor (SG→UK/US, US→UK, UK→EU) + intent (remit, pay contractor, self-transfer, purchase).​
+	•	Wizard produces: on-ramp options → send flow → off-ramp options, plus safety checklist.​
+	•	Careers hub
+	•	Role families (Product, Compliance, Engineering, Treasury/Risk, BD/Partnerships).
+	•	Skill graph and learning paths; job aggregation + alerts.
+Regulated-first policy (ranking + badges)
+Default recommendation policy
+	•	Portal defaults to stablecoins and pathways that are aligned with recognized regulatory frameworks in the relevant geography (e.g., MAS stablecoin framework signals in SG context; MiCA EMT/ART regime in EU context).​
+	•	Users can toggle to “show all stablecoins,” but regulated-first remains the default sorting.​
+Badges (MVP)
+	•	REGULATED_FRAMEWORK_ALIGNED (jurisdiction + basis)​
+	•	REDEMPTION_POLICY_DISCLOSED (link to issuer/regulatory documentation)​
+	•	ATTESTATION_OR_AUDIT_LINKED (monthly/annual where applicable and disclosed)​
+Functional requirements (MVP)
+Search and discovery
+	•	Global search across entities + content.
+	•	Filters: corridor, jurisdiction, stablecoin, company, regulator, theme, date.
+	•	Follow entities (stablecoin/company/regulator/corridor) to personalize Latest.
+Content and data types
+	•	Explainers (evergreen learning)
+	•	Briefs (curated news)
+	•	Tangible Actions (structured facts + evidence URL)​
+	•	Playbooks (step-by-step wizards)
+	•	Jobs (ingested postings + metadata)
+Playbooks (MVP set)
+	•	Cross-border transfer (corridor-based): SG→UK/US, US→UK, UK→EU.​
+	•	P2P transfer basics (wallet + network selection + safety).
+	•	Cash-out/off-ramp guide (destination-specific options and risks, not advice).​
+“Tangible action” schema (for trust)
+Each action must include:
+	•	Entity linkage (company/regulator/stablecoin)
+	•	Action type (launch/pilot/license/enforcement/attestation/chain expansion/partnership)​
+	•	Date + geography
+	•	Evidence link (primary preferred; reputable secondary allowed)​
+	•	Editorial confidence score (internal)
+Data model (minimum viable)
+Core entities
+	•	Stablecoin(id, name, issuer_company_id, peg_currency, type, supported_chains[], jurisdictions[], badges[], evidence_links[])​
+	•	Company(id, name, category, jurisdictions[], products[], actions[])
+	•	Regulator(id, name, jurisdiction_id, frameworks[], actions[])
+	•	Jurisdiction(id, country_or_region, notes)
+	•	Corridor(id, source_jurisdiction_id, dest_jurisdiction_id, intents_supported[], default_assets[], default_paths[], risk_notes, last_verified_at)
+	•	Content(id, type, title, body, tags[], entity_refs[], published_at)
+	•	JobPosting(id, title, company, location, role_family, url, posted_at)
+UX requirements (MVP)
+	•	Corridor picker accessible from header and as the first step inside Use Cases.
+	•	“Regulated-first” toggle is visible and explains what “regulated-first” means in plain language.​
+	•	Every playbook step includes:
+	•	“What you’ll need” checklist
+	•	Common failure modes
+	•	Safety warnings (irreversible transfers, wrong chain)​
+Success metrics
+	•	Activation: % who follow ≥3 entities or complete ≥1 playbook.
+	•	Retention: WAU for “Latest” readers and entity followers.
+	•	Trust: % content with evidence links; low “misleading” reports.​
+	•	Use-case utility: playbook completion rate by corridor.
+	•	Careers: job alert subscriptions and outbound job click-through.
+
+

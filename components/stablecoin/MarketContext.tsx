@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './entity.module.css';
 import { MarketData } from '@/lib/api/marketData';
+import { SupplyChart } from '@/components/dashboard/SupplyChart';
 
 export default function MarketContext({ marketData }: { marketData: MarketData }) {
     const formatCurrency = (val: number | null) => {
@@ -56,6 +57,14 @@ export default function MarketContext({ marketData }: { marketData: MarketData }
                             <div className={styles.dataValue}>{chain.percentage.toFixed(1)}%</div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {marketData.supply_history && marketData.supply_history.length > 0 && (
+                <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
+                    <div style={{ marginLeft: '-16px', marginRight: '-16px' }}>
+                        <SupplyChart data={marketData.supply_history} />
+                    </div>
                 </div>
             )}
         </div>

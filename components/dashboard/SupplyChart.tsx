@@ -66,8 +66,8 @@ export function SupplyChart({ data }: { data: SupplyPoint[] }) {
                     ))}
                 </div>
             </div>
-            <div style={{ width: '100%', flex: 1, minHeight: 300 }}>
-                <ResponsiveContainer>
+            <div style={{ width: '100%', flex: 1, height: 300 }}>
+                <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                         <defs>
                             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">

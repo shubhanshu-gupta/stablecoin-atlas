@@ -1,0 +1,569 @@
+Stablecoin Atlas
+Product Requirements Document
+Stablecoin Entity Pages
+Phase 2 Growth  ·  Discovery + Organic Traffic  ·  April 2026
+
+
+WHY ENTITY PAGES, NOT THE COMPARISON TOOL:  Your newsletter already promised readers that every stablecoin links to its reserve attestation. That promise needs to be fulfilled before any new surface is built. Entity pages are also the structural prerequisite for the comparison tool — you cannot compare data you haven’t structured. Build the foundation first.
+
+Document status
+Draft for review
+Phase
+Phase 2 — Growth / Organic Discovery
+Owner
+Product (Stablecoin Atlas)
+Engineering handoff
+Antigravity
+Scope decision
+Stablecoin Entity Pages (not Comparison Tool at this time)
+Target launch
+6–8 weeks from kick-off
+Depends on
+Phase 1 portal (nav, disclaimers, Latest feed) live
+
+
+1.  Scope Decision: Entity Pages Before Comparison Tool
+The growth plan identifies two closely related features: (a) Stablecoin Directory / Entity Pages and (b) a Comparison Tool (“Compare USDC vs USDT vs PYUSD”). Both are valuable. This PRD recommends building Entity Pages first and deferring the Comparison Tool to Phase 3, for four concrete reasons.
+
+1.1  The newsletter has already created a credibility debt
+
+CONTEXT:  “Each stablecoin on the Atlas now links directly to its most recent reserve attestation — alongside the asset type, backing mechanism, and depeg history. If you hold any stablecoin and haven’t looked at its attestation page, this week’s concept section is a good reason to start.”
+
+This copy has already been sent to subscribers. The attestation pages it references do not yet exist. Every day they remain missing is a day a subscriber checks and finds nothing — eroding the trust the newsletter was designed to build. Entity pages fulfil this promise with precision: each stablecoin gets its own page, and that page surfaces the reserve attestation link.
+
+1.2  Entity Pages are a structural prerequisite for the Comparison Tool
+The comparison tool requires clean, structured, field-level data for each stablecoin: peg currency, issuer, chain support, regulatory alignment, reserve composition, depeg history. None of that data currently exists in a queryable form. Building the comparison tool before the entity pages means either:
+	•	hardcoding comparison data (brittle, doesn’t scale), or
+	•	building the entity data model twice (wasted effort).
+
+The correct sequence is: data model → entity pages → comparison tool. This PRD establishes the data model and the pages. The comparison tool can be shipped as a thin layer on top in Phase 3.
+
+1.3  Entity Pages serve all three user personas; the Comparison Tool primarily serves one
+The portal’s three personas have different needs from structured stablecoin data:
+
+FinTech / Compliance professional
+Needs regulatory status, attestation links, chain support — all on one page, citable. Entity pages deliver this.
+Remittance-oriented user
+Needs to understand what a specific stablecoin is and whether it’s safe before using it in a playbook. Entity pages deliver this.
+Curious learner
+Lands on a search result for “what is USDC” or “is PYUSD regulated” and needs a clear, structured answer. Entity pages deliver this.
+
+The comparison tool primarily serves the first persona. Entity pages serve all three and also generate the organic traffic that builds the audience for everything else.
+
+1.4  Entity Pages are the highest-ROI SEO investment available
+High-volume, well-answerable search queries currently unaddressed:
+	•	"USDC reserve attestation" — high intent, poorly served
+	•	"is USDT regulated in Singapore" — corridor-specific, high trust value
+	•	"EURC vs USDC" — will surface entity pages even before the comparison tool launches
+	•	"PYUSD backing mechanism" — growing query, thin results
+
+Each entity page is a long-term organic traffic asset. The Comparison Tool is a useful tool but is unlikely to rank as well as properly structured entity pages for informational queries.
+
+2.  Product Overview
+2.1  What this feature is
+A structured directory of stablecoins, each with a dedicated page containing: identity metadata, reserve and attestation data, regulatory alignment by jurisdiction, chain/network support, market context, and a timeline of notable events. The directory is browsable, filterable, and individually linkable. Every stablecoin the Atlas references in news, playbooks, or careers can link to its entity page.
+
+2.2  What it is not
+	•	Not a trading terminal. No buy/sell actions.
+	•	Not financial advice. All reserve and market data is informational and disclaimed.
+	•	Not a wallet or custodian. No fund-holding functionality.
+	•	Not a comparison tool (Phase 3). This phase builds the data layer; the comparison UI comes next.
+
+2.3  Where it lives in the information architecture
+Top-nav entry
+Companies → Stablecoins tab (also accessible via global search)
+URL pattern
+/stablecoins  (directory)   /stablecoins/[slug]  (entity page)
+Cross-links
+Latest feed → links stablecoin mentions to entity pages; Playbooks → links suggested assets to entity pages; Careers → links skill tags to related stablecoin pages
+Internal links from entity pages
+Issuer entity page; Regulator pages for relevant jurisdictions; Related content (briefs, tangible actions)
+
+3.  User Stories
+3.1  FinTech / Compliance professional
+	•	As a compliance officer at a bank, I want to find the regulatory alignment status of USDC in Singapore in under 30 seconds, so I can cite it in an internal briefing without hunting across multiple sources.
+	•	As a product manager at a fintech, I want to see all chains that USDC is supported on, so I know which networks are relevant for our integration.
+	•	As a risk analyst, I want to access the most recent reserve attestation report for USDT, so I can assess backing risk without having to navigate Tether’s site.
+
+3.2  Remittance-oriented user
+	•	As someone in Singapore sending money to the UK, I want to understand whether the stablecoin recommended in the playbook is safe and backed before I use it, so I feel confident putting real money on it.
+	•	As a first-time stablecoin user, I want a plain-English summary of what “reserve-backed” means for the specific coin I’m about to use, not a generic definition.
+
+3.3  Curious learner
+	•	As someone who Googled “what is PYUSD”, I want to land on a page that tells me who issued it, what backs it, whether it’s regulated, and where I can use it — all without needing to understand DeFi.
+	•	As a reader of the Stablecoin Atlas newsletter, I want to click through from the newsletter to the attestation page the issue referenced, and actually find it.
+
+4.  MVP Stablecoin Roster
+Launch with 10 stablecoins covering the portal’s MVP corridors (SG → UK/US, US → UK, UK → EU) and primary search demand. Expand post-launch.
+
+Stablecoin
+Issuer
+Peg
+Corridor Relevance
+SEO Priority
+USDC
+Circle
+USD
+SG→US, US→UK, all corridors
+Very high
+USDT
+Tether
+USD
+All corridors (high volume)
+Very high
+PYUSD
+PayPal/Paxos
+USD
+US→UK
+High (growing)
+EURC
+Circle
+EUR
+UK→EU
+High
+XSGD
+StraitsX
+SGD
+SG→UK/US
+High (niche)
+FDUSD
+First Digital
+USD
+SG→US
+Medium
+EURS
+Stasis
+EUR
+UK→EU
+Medium
+GBPT
+Tether
+GBP
+UK→EU
+Medium
+DAI/USDS
+Sky (MakerDAO)
+USD
+General
+Medium
+USDP
+Paxos
+USD
+US→UK
+Medium
+
+5.  Page Structure: /stablecoins/[slug]
+Each entity page is divided into six zones. The order is deliberate: the most-searched and trust-critical information (identity, reserve backing) appears first, before market and event data.
+
+Zone 1 — Identity Header (above the fold)
+Stablecoin name + ticker
+e.g. USD Coin (USDC)
+Issuer
+Linked to issuer entity page (Companies section)
+Peg currency
+USD / EUR / GBP / SGD
+Type
+Fiat-backed / Algorithmic / Commodity-backed / CDP
+One-line plain-English summary
+Max 2 sentences. No jargon. Answers: what is it, who made it, what backs it.
+Trust badges
+REGULATED_FRAMEWORK_ALIGNED / REDEMPTION_POLICY_DISCLOSED / ATTESTATION_OR_AUDIT_LINKED (see badge spec in Phase 1 PRD)
+Last verified date
+When Atlas last reviewed/updated this page
+
+Zone 2 — Reserve & Attestation Panel
+
+NOTE:  This is the panel promised in the newsletter. It is the highest-trust zone on the page. Every field must have a source link or be explicitly marked “not disclosed.”
+
+Backing mechanism
+Plain-English description (e.g. “Held in cash and short-term US Treasuries at regulated financial institutions”)
+Reserve composition
+Asset breakdown if disclosed (e.g. 80% US Treasuries, 20% cash). Source link required.
+Attestation frequency
+Monthly / Quarterly / Annual / Not disclosed
+Most recent attestation
+Date + link to primary source (issuer site or auditor report). If unavailable: “Not publicly available as of [date].”
+Attestation provider
+Name of auditing/attestation firm
+Redemption policy
+Who can redeem, minimum amounts, process. Source link. If not disclosed: stated explicitly.
+Depeg history
+Timeline of any deviation >0.5% from peg, with date and approximate magnitude. Empty state: “No depeg events recorded in Atlas data.”
+
+Zone 3 — Regulatory Alignment
+A jurisdiction-by-jurisdiction view of the stablecoin’s regulatory status. Render as a card grid, one card per relevant jurisdiction.
+
+Jurisdiction
+Country or region (SG, US, UK, EU, HK, etc.)
+Framework
+Name of relevant framework (e.g. MAS Stablecoin Framework, MiCA EMT)
+Status
+Aligned / Under review / Not applicable / Unknown
+Basis
+One sentence explaining why the classification was made, with evidence link
+Last updated
+Date of last status review by Atlas editorial
+
+Zone 4 — Chain & Network Support
+Supported chains
+List of blockchains (Ethereum, Solana, Polygon, etc.) with contract address links to block explorer
+Bridge support
+Whether cross-chain bridging is officially supported by the issuer, and which bridges are endorsed
+Caution note
+Inline warning: “Always verify the contract address before sending. Using an unofficial contract can result in permanent loss of funds.”
+
+Zone 5 — Market Context (informational only)
+
+IMPORTANT:  This section is clearly labelled as informational/third-party data. It does not constitute investment advice. Source attribution (e.g. CoinGecko, DeFiLlama) is shown next to each figure.
+
+Market cap
+Current USD value, sourced from CoinGecko API
+30-day supply change
+Mint/burn signal (% change in circulating supply), sourced from DeFiLlama
+Chain distribution
+% of supply on each chain (DeFiLlama)
+24h volume
+Approximate trading volume, sourced from CoinGecko
+
+Zone 6 — Notable Events (Timeline)
+A reverse-chronological list of tangible actions related to this stablecoin, pulled from the Tangible Tracker data model. Each entry shows: date, action type, one-line summary, evidence link. Examples: chain expansion, new jurisdiction license, reserve attestation published, enforcement action, redemption policy change.
+
+6.  Directory Page: /stablecoins
+The directory is the entry point for browse-first users and the SEO-facing landing page for queries like “list of regulated stablecoins” or “SGD stablecoin.”
+
+6.1  Layout
+	•	Card grid (default): one card per stablecoin showing name, issuer, peg, trust badges, and market cap.
+	•	Table view (toggle): same data in a scannable table, better for professional users comparing multiple coins at once.
+	•	Corridor filter: pre-filter directory by corridor relevance (e.g. “Show stablecoins relevant to SG → UK”).
+	•	Peg filter: USD / EUR / GBP / SGD / Other.
+	•	Badge filter: show only ATTESTATION_OR_AUDIT_LINKED coins; show only REGULATED_FRAMEWORK_ALIGNED coins.
+	•	Search: live filter by name or ticker within the directory.
+
+6.2  Default sort order
+Sort by: (1) badge completeness descending, (2) market cap descending. This ensures the most credible and well-evidenced entries appear first without requiring users to understand the badge system.
+
+7.  Data Model
+7.1  Stablecoin entity schema
+Field
+Type
+Description
+id
+string
+Unique slug, URL-safe (e.g. “usdc”, “xsgd”)
+name
+string
+Full display name
+ticker
+string
+Trading symbol
+issuer_id
+ref → Company
+Foreign key to issuer entity page
+peg_currency
+enum
+USD | EUR | GBP | SGD | Other
+type
+enum
+fiat_backed | algo | commodity | cdp
+summary
+string
+Plain-English 2-sentence description
+badges
+string[]
+Array of badge identifiers from badge spec
+backing_description
+string
+Plain-English reserve description
+reserve_composition
+object[]
+Array of {asset_type, percentage, source_url}
+attestation_frequency
+enum
+monthly | quarterly | annual | not_disclosed
+latest_attestation_url
+string | null
+Direct URL to most recent report
+latest_attestation_date
+date | null
+Date of most recent attestation
+attestation_provider
+string | null
+Name of attestation/audit firm
+redemption_policy_url
+string | null
+Link to issuer redemption terms
+redemption_policy_notes
+string
+Plain-English summary
+depeg_events
+object[]
+Array of {date, magnitude_pct, notes}
+regulatory_alignments
+object[]
+Array of {jurisdiction_id, framework, status, basis, evidence_url, last_reviewed_at}
+supported_chains
+object[]
+Array of {chain_name, contract_address, explorer_url, bridge_supported}
+notable_events
+ref[]
+Foreign keys to TangibleAction entries
+last_verified_at
+date
+Date Atlas last reviewed this entity
+created_at
+date
+Record creation date
+
+7.2  Data sourcing strategy
+Market data (market cap, supply, volume)
+CoinGecko API (free tier). DeFiLlama API for supply and chain distribution. Refresh daily via cron.
+Reserve / attestation data
+Manual curation by Atlas editorial team. Link to primary source (issuer website or auditor). Trigger for refresh: newsletter item references an attestation, or 30-day staleness threshold.
+Regulatory alignment
+Manual curation linked to Regulatory Tracker (Phase 1). Same editorial team. Refresh triggered by tracker updates.
+Chain support / contract addresses
+Manual curation cross-referenced against issuer’s official documentation. Refresh when chain expansion event logged in Tangible Tracker.
+Depeg history
+Seeded manually for historical events. Future: DeFiLlama peg data + threshold alert (>0.5%) triggers editorial review.
+
+EDITORIAL INTEGRITY NOTE:  Reserve composition and attestation data must link to primary sources (issuer or auditor). Never use secondary aggregator data for these fields without corroboration. If primary source is unavailable, the field displays “Not publicly available as of [date]” rather than an estimate.
+
+8.  Functional Requirements
+8.1  Entity page features
+Feature / Requirement
+Priority
+Notes
+Stablecoin entity page at /stablecoins/[slug]
+P0
+Core deliverable
+All six content zones rendered
+P0
+See Section 5
+Reserve attestation link (or “not available” state)
+P0
+Fulfils newsletter promise
+Trust badges displayed in header zone
+P0
+Consistent with Phase 1 badge spec
+Depeg history timeline
+P0
+Key differentiator; even empty state is informative
+Regulatory alignment cards by jurisdiction
+P0
+Critical for compliance persona
+Inline disclaimer before market data zone
+P0
+Hard compliance requirement
+Chain support table with contract address links
+P1
+Safety-critical; wrong chain = fund loss
+Last verified date visible on page
+P1
+Trust signal; shows data is maintained
+Market data from CoinGecko/DeFiLlama API
+P1
+Live context; can degrade gracefully if API down
+Notable events timeline (from Tangible Tracker)
+P1
+Connects entity pages to Latest section
+Mobile-responsive layout
+P1
+Remittance persona is predominantly mobile
+Structured data markup (JSON-LD / schema.org)
+P1
+Required for rich search snippets
+Social/OG meta tags per entity page
+P1
+Enables meaningful newsletter link previews
+Copy-to-clipboard for contract addresses
+P2
+Reduces manual error
+"Report outdated info" link
+P2
+Lightweight community accuracy mechanism
+
+8.2  Directory page features
+Feature / Requirement
+Priority
+Notes
+Directory at /stablecoins with card grid view
+P0
+Browse entry point
+Table view toggle
+P1
+Professional persona preference
+Peg currency filter
+P0
+Highest-use filter
+Corridor relevance filter
+P1
+Connects directory to playbook persona
+Badge filter
+P1
+Regulated-first discovery without the label
+Live search / filter within directory
+P1
+Usability essential for 10+ entries
+Default sort by badge completeness then market cap
+P0
+Regulated-first by behaviour, not label
+"Coming soon" placeholder cards for post-MVP coins
+P2
+Signals breadth of roadmap
+
+9.  SEO Requirements
+Entity pages are the primary organic growth mechanism for this phase. The following requirements are non-negotiable for the pages to rank.
+
+Feature / Requirement
+Priority
+Notes
+Unique <title> and <meta description> per page
+P0
+e.g. “USDC Reserve Attestation, Regulatory Status & Chain Guide | Stablecoin Atlas”
+H1 matching primary keyword intent
+P0
+e.g. “USD Coin (USDC): Reserve Backing, Attestation & Regulatory Status”
+Canonical URL set correctly
+P0
+Prevents duplicate content from filter URLs
+JSON-LD structured data (FinancialProduct or Dataset schema)
+P1
+Enables rich snippets in Google Search
+Internal linking from Latest articles to entity pages
+P0
+Link equity flow from existing content
+Internal linking from Playbooks to entity pages
+P0
+Link equity from high-engagement pages
+Sitemap.xml includes all entity page URLs
+P1
+Ensures rapid indexing
+Page load under 3s on mobile (Core Web Vitals)
+P1
+Ranking signal; critical for remittance persona
+Breadcrumb markup (Stablecoins > USDC)
+P1
+Improves SERP display
+Alt text on all icons/badges
+P2
+Accessibility + minor SEO signal
+
+10.  Compliance & Disclaimer Requirements
+
+HARD REQUIREMENT:  All disclaimer requirements from the Phase 1 PRD apply to entity pages. The following are entity-page-specific additions.
+
+	•	Market data zone must be prefaced with: “Market data is sourced from third-party providers (CoinGecko, DeFiLlama) and is provided for informational purposes only. It is not an offer, recommendation, or advice to buy, sell, or use any asset.”
+	•	Reserve and attestation data must include: “Attestation data links to issuer or auditor primary sources. Stablecoin Atlas does not verify or audit reserve claims independently.”
+	•	Regulatory alignment cards must include: “Regulatory status reflects Atlas editorial assessment and may not reflect current legal status. Verify directly with the relevant regulatory body.”
+	•	Depeg history section must include: “Historical depeg events do not predict future stability. Past performance does not indicate future behaviour.”
+	•	Chain support table must include the caution note about contract address verification (specified in Zone 4, Section 5).
+
+11.  UX & Design Guidance
+11.1  Trust hierarchy
+The page should communicate trust visually through hierarchy, not through labels. The trust badges in the header tell the story — the content zones substantiate it. Avoid repeating the word “regulated” on the page; let the Regulatory Alignment zone speak for itself.
+
+11.2  Empty and incomplete states
+Every field that cannot be populated must show a clear, honest empty state rather than being omitted or hidden. This is a trust feature, not a limitation:
+	•	Attestation not available: “No public attestation report has been found for this stablecoin as of [date]. If you have a source, report it below.”
+	•	Regulatory status unknown: “Atlas does not currently have sufficient data to assess this jurisdiction. Last reviewed: [date].”
+	•	No depeg events: “No depeg events recorded in Atlas data. This does not guarantee future stability.”
+
+11.3  Mobile-first layout guidance
+	•	Zone 1 (Identity Header) and Zone 2 (Reserve Panel) must be fully readable on a 390px viewport without horizontal scroll.
+	•	Trust badges should render as pill tags, not icons requiring tooltip hover.
+	•	Contract addresses in Zone 4 should truncate with copy-to-clipboard, never overflow.
+	•	Regulatory alignment cards should stack vertically on mobile (not a horizontal scrolling carousel).
+
+11.4  Cross-links and contextual discovery
+	•	From Latest articles: stablecoin mentions auto-link to entity pages.
+	•	From Playbooks: stablecoin suggestions link to entity pages with an anchor to the Regulatory Alignment zone (relevant to the corridor jurisdiction).
+	•	From entity pages: “Related news” pulls the 3 most recent Latest items tagged to this stablecoin.
+	•	From entity pages: “Used in corridors” shows which playbooks include this stablecoin with a direct link.
+
+12.  Content Operations
+12.1  Launch content requirements
+Each of the 10 MVP stablecoins must have the following fields populated at launch (P0) or within 2 weeks post-launch (P1):
+
+P0 at launch
+Name, ticker, issuer, peg, type, summary, trust badges, backing description, latest attestation link or honest empty state, redemption policy link or honest empty state, regulatory alignment for at least 2 of: SG / US / UK / EU, supported chains (top 3 chains minimum)
+P1 within 2 weeks
+Full reserve composition breakdown, all relevant jurisdiction regulatory cards, depeg history (seeded for known events), chain support complete, notable events timeline populated from Tangible Tracker
+
+12.2  Maintenance model
+	•	Attestation data: review triggered when a new attestation is published by the issuer. Target SLA: update within 48 hours of publication.
+	•	Regulatory alignment: review triggered by Regulatory Tracker updates. Same editorial team maintains both.
+	•	Market data: API-driven, auto-refreshed daily. No manual maintenance required.
+	•	Notable events: auto-populated from Tangible Tracker. No separate workflow.
+	•	Staleness indicator: if last_verified_at is >60 days, the page shows a subtle banner: “This page is due for review. Data may not reflect the latest developments.”
+
+13.  Success Metrics
+Metric
+Target (90 days)
+Measurement
+Organic search impressions
+5,000+ / month by day 90
+Google Search Console
+Organic click-through rate
+>3% on entity page queries
+Google Search Console
+Entity page sessions
+Top 3 traffic pages on the site
+Analytics (GA4 or equivalent)
+Attestation link click-through
+>15% of entity page visitors
+Click event tracking on attestation URLs
+Newsletter promise fulfilment
+All 10 MVP pages live within 6 weeks
+Content ops tracking
+Cross-link engagement
+>20% of playbook users visit an entity page
+Session path analysis
+Time on page
+>90 seconds average
+Analytics
+"Report outdated info" submissions
+Track volume; no target (quality signal)
+Form submissions
+Inbound links (backlinks)
+5+ editorial links within 90 days
+Ahrefs / GSC
+
+14.  Out of Scope (this phase)
+	•	Comparison Tool (“Compare USDC vs USDT”) — Phase 3, built on this data layer.
+	•	Issuer entity pages (Companies section) — separate workstream; entity pages link to them but don’t require them to launch.
+	•	Regulator entity pages — separate workstream; regulatory alignment zone links to them but functions without them.
+	•	User-submitted data or corrections beyond the “Report outdated info” link.
+	•	Price or exchange rate calculators — addressed in Tools section (separate workstream).
+	•	Historical supply charts beyond the 30-day snapshot — Phase 3 with expanded data infrastructure.
+	•	API endpoint for developer access to entity data — Phase 4.
+
+15.  Phasing & Build Sequence
+Recommended build order to enable incremental delivery and early SEO indexing:
+
+Week 1–2
+Data model finalised and seeded for 10 stablecoins (P0 fields only). No UI yet. Internal review of data accuracy.
+Week 2–3
+Directory page (/stablecoins) live with card grid. P0 entity pages live for USDC, USDT, XSGD (highest SEO and corridor priority). Submit to Google Search Console.
+Week 3–4
+Remaining 7 entity pages live. P1 fields populated. Cross-links from Latest and Playbooks activated. Market data API connected.
+Week 4–5
+Mobile QA and performance pass. Structured data / JSON-LD validated. OG tags confirmed. Table view and filters on directory page.
+Week 5–6
+P1 content ops complete (all fields populated). “Report outdated info” feature. Staleness banner logic. Soft newsletter announcement.
+Week 6+
+Monitor Search Console for impressions. Begin seeding Comparison Tool data model in parallel with operations of this phase.
+
+Appendix: Comparison Tool — Deferred to Phase 3
+The comparison tool is not being abandoned — it is being sequenced correctly. Once entity pages are live and the data model is populated, the comparison tool is primarily a UI concern: render two or more entity page data objects side-by-side, highlighting differences.
+
+When Phase 3 is scoped, the comparison tool should address:
+	•	URL structure: /compare?coins=usdc,usdt,pyusd (shareable, linkable)
+	•	Fields to compare: peg, issuer, backing mechanism, attestation frequency, regulatory alignment by jurisdiction, chains supported, market cap, 30-day supply change
+	•	Highlighting: auto-highlight where coins differ (not where they’re the same)
+	•	SEO target queries: “USDC vs USDT”, “EURC vs EURS”, “best EUR stablecoin”
+	•	Disclaimer: same requirements as entity pages, applied to the comparison surface
+
+
+PHASE 3 DEPENDENCY:  Comparison tool requires: entity page data model live (this phase), at least 6 months of attestation data to make “atttestation frequency” meaningful, and Regulatory Tracker updated for all relevant jurisdictions (Phase 1 expansion).
+
+End of Document

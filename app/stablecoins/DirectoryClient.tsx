@@ -86,9 +86,31 @@ export default function DirectoryClient({ stablecoins, companies, corridors }: P
 
     return (
         <div className={styles.container}>
-            <header className={styles.header}>
-                <h1 className={styles.title}>Stablecoin Directory</h1>
-                <p className={styles.subtitle}>Explore and compare regulated stablecoins.</p>
+            <header className={styles.header} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                    <h1 className={styles.title}>Stablecoin Directory</h1>
+                    <p className={styles.subtitle}>Explore and compare regulated stablecoins.</p>
+                </div>
+                <Link 
+                    href="/compare" 
+                    style={{ 
+                        padding: '0.5rem 1rem', 
+                        background: 'var(--primary)', 
+                        color: '#000', 
+                        borderRadius: 'var(--radius-sm)', 
+                        textDecoration: 'none', 
+                        fontWeight: '600',
+                        fontSize: '0.9rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                    }}
+                >
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Compare Stablecoins
+                </Link>
             </header>
 
             <div className={styles.controls}>
